@@ -21,7 +21,10 @@
         "styles.less",
         "../node_modules/leaflet/dist/leaflet.css"
       ],
-      "scripts": ["../node_modules/leaflet/dist/leaflet.js"],
+      "scripts": [
+        "../node_modules/leaflet/dist/leaflet.js",
+        "./dependencies/leaflet-wfst.js"
+      ],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
