@@ -5,7 +5,7 @@ declare var L: any;
 
 @Component({
   selector: 'esp-street-layer',
-  template: '<esp-street-layer-dialog [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
+  template: '<esp-street-layer-dialog [streetLayer]="streetLayer" [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
 })
 export class StreetLayerComponent implements OnInit {
 

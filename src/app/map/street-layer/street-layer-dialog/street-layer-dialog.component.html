@@ -6,11 +6,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h3>{{parameters.properties.status}}</h3>
+    <p>{{parameters.id}}</p>
+    <p>{{parameters.properties.addinfo1te}}</p>
+    <select class="custom-select" [(ngModel)]="parameters.properties.status">
+      <option *ngFor="let condition of conditionOptions" [ngValue]="condition.value">{{condition.label}}</option>
+    </select>
   </div>
   <div class="modal-footer">
-    <button *ngIf="!editable" class="btn btn-primary" (click)="edit()">Muokkaa</button>
-    <button *ngIf="editable" class="btn btn-primary" (click)="save()">Tallenna</button>
+    <button class="btn btn-primary" (click)="save()">Tallenna</button>
     <button class="btn btn-default" (click)="close()">Sulje</button>
   </div>
 </template>

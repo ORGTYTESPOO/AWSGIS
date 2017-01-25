@@ -10,8 +10,16 @@ export class StreetLayerDialogComponent implements OnInit {
 
   @ViewChild('streetConditionDialog') streetConditionDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
-  editable: boolean = false;
+  @Input() streetLayer: any;
   parameters: any;
+
+  conditionOptions = [
+    {value: 1, label: 'Erittäin huono'},
+    {value: 2, label: 'Huono'},
+    {value: 3, label: 'Tyydyttävä'},
+    {value: 4, label: 'Hyvä'},
+    {value: 5, label: 'Erinomainen'},
+  ];
 
   constructor(private modalService: NgbModal) { }
 
@@ -23,12 +31,8 @@ export class StreetLayerDialogComponent implements OnInit {
     })
   }
 
-  edit(): void {
-    this.editable = true;
-  }
-
   save(): void {
-    this.editable = false;
+    this.streetLayer.save();
   }
 
 }
