@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  postgis:
+    image: kartoza/postgis:9.5-2.2
+    environment:
+      - POSTGRES_USER=pgadmin
+      - POSTGRES_PASS=pgadmin
+      - ALLOW_IP_RANGE="0.0.0.0/0"
+    volumes:
+      - './docker_data/pg_data:/var/lib/postgresql'
+    ports:
+      - 5432:5432
+
+  geoserver:
+    image: oscarfonts/geoserver:2.10.0
+    volumes:
+      - './docker_data/geoserver_data:/var/local/geoserver'
+    links:
+      - postgis
+    ports:
+      - 8080:8080
