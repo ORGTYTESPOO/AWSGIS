@@ -14,28 +14,28 @@
 
 1. Open http://localhost:8080/geoserver and login (admin/geoserver)
 2. Create new workspace
-  -- Go to Workspaces
-  -- Add new Workspace
-  -- name: espoo
-  -- namespace URI: espoo
-  -- check default workspace
+  - Go to Workspaces
+  - Add new Workspace
+  - name: espoo
+  - namespace URI: espoo
+  - check default workspace
 3. Create new store
-  -- Go to Stores
-  -- Add new Store
-  -- Select PostGIS
-  -- Name: Espoo AWS GIS
-  -- Host: postgis
-  -- Database: gis
-  -- User: pgadmin
-  -- Passwd: pgadmin
-  -- Save
+  - Go to Stores
+  - Add new Store
+  - Select PostGIS
+  - Name: Espoo AWS GIS
+  - Host: postgis
+  - Database: gis
+  - User: pgadmin
+  - Passwd: pgadmin
+  - Save
 4. Publish layer
-  -- Go to layers
-  -- Add a new layer
-  -- Add layer from: espoo:Espoo AWS GIS
-  -- Click publish
-  -- Declared SRS: EPSG:3857
-  -- SRS handling: Reproject native to declared
-  -- From Bounding Boxes -section, click Compute from data and Compute from native bounds
-  -- Click reload feature type
-  -- Save
+  - Go to layers
+  - Add a new layer
+  - Add layer from: espoo:Espoo AWS GIS
+  - Click publish
+  - Declared SRS: EPSG:3857
+  - SRS handling: Reproject native to declared
+  - From Bounding Boxes -section, click Compute from data and Compute from native bounds
+  - Click reload feature type
+  - Save
