@@ -19,7 +19,8 @@
       "mobile": false,
       "styles": [
         "styles.less",
-        "../node_modules/leaflet/dist/leaflet.css"
+        "../node_modules/leaflet/dist/leaflet.css",
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css"
       ],
       "scripts": [
         "../node_modules/leaflet/dist/leaflet.js",
