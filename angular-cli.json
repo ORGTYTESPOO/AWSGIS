@@ -18,13 +18,12 @@
       "prefix": "esp",
       "mobile": false,
       "styles": [
-        "styles.less",
-        "../node_modules/leaflet/dist/leaflet.css",
-        "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "../node_modules/openlayers/dist/ol.css",
+        "styles.less"
       ],
       "scripts": [
-        "../node_modules/leaflet/dist/leaflet.js",
-        "./dependencies/leaflet-wfst.js",
+        "../node_modules/openlayers/dist/ol.js",
         "../node_modules/mobile-detect/mobile-detect.min.js"
       ],
       "environments": {
