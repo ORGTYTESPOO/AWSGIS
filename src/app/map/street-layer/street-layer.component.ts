@@ -26,7 +26,11 @@ export class StreetLayerComponent implements OnInit {
         weight: 2
       }
     }).addTo(this.map);
-
+      // .once('load', () => {
+      //
+      // console.log('loaded streetlayer', this.streetLayer);
+      // this.streetLayer.enableEdit();
+    // });
     this.dialogParameterStream = new Subject();
 
     this.streetLayer.on('click', (e) => {

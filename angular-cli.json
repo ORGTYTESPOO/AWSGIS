@@ -24,7 +24,8 @@
       ],
       "scripts": [
         "../node_modules/leaflet/dist/leaflet.js",
-        "./dependencies/leaflet-wfst.js"
+        "./dependencies/leaflet-wfst.js",
+        "../node_modules/mobile-detect/mobile-detect.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
