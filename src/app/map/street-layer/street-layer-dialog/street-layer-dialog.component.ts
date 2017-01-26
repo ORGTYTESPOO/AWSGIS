@@ -32,7 +32,7 @@ export class StreetLayerDialogComponent implements OnInit {
   }
 
   save(): void {
-    this.streetLayer.save();
+    console.log('Save feature', this.parameters);
   }
 
 }

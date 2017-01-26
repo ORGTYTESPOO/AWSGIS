@@ -6,11 +6,11 @@
     </button>
   </div>
   <div class="modal-body">
-    <p>{{parameters.id}}</p>
-    <!--<p>{{parameters.properties.addinfo1te}}</p>-->
-    <!--<select class="custom-select" [(ngModel)]="parameters.properties.status">-->
-      <!--<option *ngFor="let condition of conditionOptions" [ngValue]="condition.value">{{condition.label}}</option>-->
-    <!--</select>-->
+    <p>{{parameters.id_}}</p>
+    <p>{{parameters.values_.name}}</p>
+    <select class="custom-select" [(ngModel)]="parameters.values_.worstura">
+      <option *ngFor="let condition of conditionOptions" [ngValue]="condition.value">{{condition.label}}</option>
+    </select>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" (click)="save()">Tallenna</button>
