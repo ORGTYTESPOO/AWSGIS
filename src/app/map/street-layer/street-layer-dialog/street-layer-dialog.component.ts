@@ -13,6 +13,8 @@ export class StreetLayerDialogComponent implements OnInit {
   @Input() dialogParameterStream: Subject<any>;
   @Input() streetLayer: any;
   parameters: any;
+  success: boolean;
+  error: boolean;
 
   conditionOptions = [
     {value: 1, label: 'Erittäin huono'},
@@ -40,8 +42,10 @@ export class StreetLayerDialogComponent implements OnInit {
       nativeElements: []
     };
 
-    // hack... find a better way or atleast create a copy of the feature if this is necessary...
-    this.parameters.set('geom', this.parameters.getGeometry());
+    // Ugly hack... unset unnecessary attributes from the object to prevent
+    // error from Geoserver. Find a nicer way to handle this.
+    let geometry = this.parameters.get('geometry');
+    let bbox = this.parameters.get('bbox');
     this.parameters.unset('geometry');
     this.parameters.unset('bbox');
 
@@ -49,10 +53,13 @@ export class StreetLayerDialogComponent implements OnInit {
     let node = format.writeTransaction([], [this.parameters], [], opts);
     let serialized = new XMLSerializer().serializeToString(node);
 
-    // doesn't work yet because geoserver says the layer is read-only...
-    // check DB credentials and make sure there is primary id
+    // Restore the unset attributes
+    this.parameters.set('geometry', geometry);
+    this.parameters.set('bbox', bbox);
+
     axios.post(
-      'http://localhost:8080/geoserver/espoo/ows?service=WFS&version=1.1.0&request=Transaction',
+      // 'http://localhost:8080/geoserver/espoo/ows?service=WFS&version=1.1.0&request=Transaction',
+      'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/ows?service=WFS&version=1.1.0&request=Transaction',
       serialized,
       {
         headers: {
@@ -61,10 +68,10 @@ export class StreetLayerDialogComponent implements OnInit {
       }
     )
     .then((result) => {
-      console.log(result);
+      this.success = true;
     })
     .catch((err) => {
-      console.log(err);
+      this.error = true;
     });
   }
 

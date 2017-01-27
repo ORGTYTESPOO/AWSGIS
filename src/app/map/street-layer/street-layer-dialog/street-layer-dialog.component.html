@@ -6,6 +6,8 @@
     </button>
   </div>
   <div class="modal-body">
+    <p *ngIf="error">Virhe tallennuksessa</p>
+    <p *ngIf="success">Tallennus onnistui!</p>
     <p>{{parameters.id_}}</p>
     <p>{{parameters.values_.name}}</p>
     <select class="custom-select" [(ngModel)]="parameters.values_.worstura">

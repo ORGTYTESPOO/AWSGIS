@@ -18,8 +18,8 @@ export class StreetLayerComponent implements OnInit {
   ngOnInit() {
     let streetLayerSource = new ol.source.Vector({
       format: new ol.format.GeoJSON(),
-      url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=espoo:katu&outputFormat=application/json',
-      // url: 'http://localhost:8080/geoserver/espoo/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=espoo:katu&outputFormat=application/json',
+      url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=espoo:katu&outputFormat=application/json',
+      // url: 'http://localhost:8080/geoserver/espoo/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=espoo:katu&outputFormat=application/json',
       strategy: ol.loadingstrategy.all
     });
 
