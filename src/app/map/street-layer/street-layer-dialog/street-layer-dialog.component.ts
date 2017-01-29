@@ -13,6 +13,7 @@ export class StreetLayerDialogComponent implements OnInit {
   @Input() dialogParameterStream: Subject<any>;
   @Input() streetLayer: any;
   parameters: any;
+  properties: any;
   success: boolean;
   error: boolean;
 
@@ -29,6 +30,7 @@ export class StreetLayerDialogComponent implements OnInit {
   ngOnInit() {
     this.dialogParameterStream.subscribe( (parameters: any) => {
       this.parameters = parameters;
+      this.properties = parameters.getProperties();
       this.success = null;
       this.error = null;
       Observable.fromPromise(this.modalService.open(this.streetConditionDialog, parameters).result).subscribe( (e: any) => {
