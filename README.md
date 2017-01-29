@@ -31,9 +31,9 @@ Run `ng github-pages:deploy` to deploy to Github Pages.
 
 ## Building the Docker image
 
-Build appication for production:
+Build application for production:
 
-`ng build -prod`
+`ng build --prod`
 
 Build the docker image:
 
