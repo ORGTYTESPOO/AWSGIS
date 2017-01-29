@@ -24,7 +24,7 @@
       ],
       "scripts": [
         "../node_modules/openlayers/dist/ol.js",
-        "../node_modules/mobile-detect/mobile-detect.min.js"
+        "../node_modules/ismobilejs/isMobile.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
