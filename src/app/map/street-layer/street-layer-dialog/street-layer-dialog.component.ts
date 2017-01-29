@@ -12,6 +12,7 @@ export class StreetLayerDialogComponent implements OnInit {
   @ViewChild('streetConditionDialog') streetConditionDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
   @Input() streetLayer: any;
+  @Input() selectInteraction: any;
   parameters: any;
   properties: any;
   success: boolean;
@@ -34,6 +35,7 @@ export class StreetLayerDialogComponent implements OnInit {
       this.success = null;
       this.error = null;
       Observable.fromPromise(this.modalService.open(this.streetConditionDialog, parameters).result).subscribe( (e: any) => {
+        this.selectInteraction.getFeatures().clear();
       }, () => {});
     })
   }
@@ -45,6 +47,9 @@ export class StreetLayerDialogComponent implements OnInit {
       featureType: 'katu',
       nativeElements: []
     };
+
+    // Set the modified properties to the feature to be serialized
+    this.parameters.setProperties(this.properties);
 
     // Ugly hack... unset unnecessary attributes from the object to prevent
     // error from Geoserver. Find a nicer way to handle this.

@@ -5,12 +5,13 @@ declare var ol: any;
 
 @Component({
   selector: 'esp-street-layer',
-  template: '<esp-street-layer-dialog [streetLayer]="streetLayer" [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
+  template: '<esp-street-layer-dialog [streetLayer]="streetLayer" [selectInteraction]="selectInteraction" [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
 })
 export class StreetLayerComponent implements OnInit {
 
   @Input() map: any;
   streetLayer: any;
+  selectInteraction: any;
   dialogParameterStream: Subject<any>;
 
   constructor() { }
@@ -35,13 +36,13 @@ export class StreetLayerComponent implements OnInit {
 
     this.map.addLayer(this.streetLayer);
 
-    let selectInteraction = new ol.interaction.Select({
+    this.selectInteraction = new ol.interaction.Select({
       condition: ol.events.condition.click,
       layers: [this.streetLayer],
       hitTolerance: 2
     });
 
-    selectInteraction.on('select', (e) => {
+    this.selectInteraction.on('select', (e) => {
       if (e.selected.length === 0) {
         return;
       }
@@ -49,7 +50,7 @@ export class StreetLayerComponent implements OnInit {
       this.dialogParameterStream.next(e.selected[0]);
     });
 
-    this.map.addInteraction(selectInteraction);
+    this.map.addInteraction(this.selectInteraction);
 
     this.dialogParameterStream = new Subject();
   }
