@@ -8,8 +8,8 @@
   <div class="modal-body">
     <p *ngIf="error">Virhe tallennuksessa</p>
     <p *ngIf="success">Tallennus onnistui!</p>
-    <p>{{parameters.id_}}</p>
-    <p>{{parameters.name}}</p>
+    <p>{{parameters.get('id')}}</p>
+    <p>{{parameters.get('name')}}</p>
     <select class="custom-select" [(ngModel)]="parameters.worstura">
       <option *ngFor="let condition of conditionOptions" [ngValue]="condition.value">{{condition.label}}</option>
     </select>
