@@ -25,7 +25,7 @@ export class MapComponent {
       source: new ol.source.OSM()
     });
 
-    const mapConfig = {
+    let defaultMapConfig = {
       target: 'map',
       view: new ol.View({
         center: centerCoordinate,
@@ -37,16 +37,23 @@ export class MapComponent {
       navigator.geolocation.getCurrentPosition( (result) => {
         centerCoordinate = ol.proj.fromLonLat([result.coords.longitude, result.coords.latitude])
         this.showMap = true;
-        this.map = new ol.Map(mapConfig);
+        const geolocatedMapConfig = {
+          target: 'map',
+          view: new ol.View({
+            center: centerCoordinate,
+            zoom: 17
+          })
+        }
+        this.map = new ol.Map(geolocatedMapConfig);
         this.map.addLayer(basemapLayer);
       }, () => {
         this.showMap = true;
-        this.map = new ol.Map(mapConfig);
+        this.map = new ol.Map(defaultMapConfig);
         this.map.addLayer(basemapLayer);
       });
     } else {
       this.showMap = true;
-      this.map = new ol.Map(mapConfig);
+      this.map = new ol.Map(defaultMapConfig);
       this.map.addLayer(basemapLayer);
     }
 
