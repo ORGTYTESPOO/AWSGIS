@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-declare var ol: any;
+import * as ol from 'openlayers';
+// declare var ol: any;
+
+
 declare var isMobile: any;
 
 @Component({
@@ -15,7 +18,7 @@ export class MapComponent {
   constructor() { }
 
   ngOnInit() {
-
+    console.log(ol);
 
 
     const centerLongitude = 24.82;
