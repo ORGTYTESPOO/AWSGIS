@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import * as ol from 'openlayers';
-// declare var ol: any;
-
-
+declare var ol: any;
 declare var isMobile: any;
 
 @Component({
@@ -20,13 +17,10 @@ export class MapComponent {
   ngOnInit() {
     console.log(ol);
 
-
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
-    let centerCoordinate = ol.proj.fromLonLat([centerLongitude, centerLatitude]);
-    let basemapLayer = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    });
+    let centerCoordinate = ol.proj.fromLonLat( [centerLongitude, centerLatitude] );
+    let basemapLayer = new ol.layer.Tile( { source: new ol.source.OSM() });
 
     let defaultMapConfig = {
       target: 'map',
