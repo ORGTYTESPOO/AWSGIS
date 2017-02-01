@@ -15,15 +15,12 @@ export class MapComponent {
   constructor() { }
 
   ngOnInit() {
-
-
+    console.log(ol);
 
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
-    let centerCoordinate = ol.proj.fromLonLat([centerLongitude, centerLatitude]);
-    let basemapLayer = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    });
+    let centerCoordinate = ol.proj.fromLonLat( [centerLongitude, centerLatitude] );
+    let basemapLayer = new ol.layer.Tile( { source: new ol.source.OSM() });
 
     let defaultMapConfig = {
       target: 'map',
