@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, ElementRef, ViewChild} from '@angular/core';
 import {Observable, Subject} from "rxjs";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import * as axios from 'axios';
 
 @Component({
@@ -12,6 +12,7 @@ export class StreetLayerDialogComponent implements OnInit {
   @ViewChild('streetConditionDialog') streetConditionDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
   @Input() streetLayer: any;
+  modalRef: NgbModalRef;
   parameters: any;
   properties: any;
   success: boolean;
@@ -33,8 +34,7 @@ export class StreetLayerDialogComponent implements OnInit {
       this.properties = parameters.getProperties();
       this.success = null;
       this.error = null;
-      Observable.fromPromise(this.modalService.open(this.streetConditionDialog, parameters).result).subscribe( (e: any) => {
-      }, () => {});
+      this.modalRef = this.modalService.open(this.streetConditionDialog, parameters);
     })
   }
 
@@ -76,6 +76,7 @@ export class StreetLayerDialogComponent implements OnInit {
     )
     .then((result) => {
       this.success = true;
+      this.modalRef.close();
     })
     .catch((err) => {
       this.error = true;
