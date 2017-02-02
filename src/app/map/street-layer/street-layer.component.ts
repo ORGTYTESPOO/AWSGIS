@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {Observable, Subject} from "rxjs";
+import {Subject} from "rxjs";
 import * as axios from 'axios';
 
 declare var ol: any;
@@ -13,24 +13,37 @@ export class StreetLayerComponent implements OnInit {
   @Input() map: any;
   streetLayer: any;
   dialogParameterStream: Subject<any>;
+  @Input() mapThemeActionStream: Subject<string>;
+  wmsSource: ol.source.TileWMS;
 
   constructor() { }
 
   ngOnInit() {
+
+    this.dialogParameterStream = new Subject();
+
+    this.mapThemeActionStream.subscribe( (mapTheme: string) => {
+      let sourceParams = this.wmsSource.getParams();
+      if(sourceParams['STYLES'] !== mapTheme) {
+        sourceParams['STYLES'] = mapTheme;
+        this.wmsSource.updateParams(sourceParams);
+      }
+    });
+
     let extent = this.map.getView().calculateExtent(this.map.getSize());
-    let wmsSource = new ol.source.TileWMS({
+    this.wmsSource = new ol.source.TileWMS({
       // url: 'http://localhost:8080/geoserver/espoo/wms',
       url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/wms',
       params: {
         'LAYERS': 'espoo:katu',
-        'TILED': true
+        'TILED': true,
       },
       serverType: 'geoserver'
     });
 
     let wmsLayer = new ol.layer.Tile({
       extent: extent,
-      source: wmsSource
+      source: this.wmsSource
     });
 
     this.map.on('click', (e) => {
@@ -40,7 +53,7 @@ export class StreetLayerComponent implements OnInit {
         INFO_FORMAT: 'application/json'
       };
 
-      let url = wmsSource.getGetFeatureInfoUrl(
+      let url = this.wmsSource.getGetFeatureInfoUrl(
         e.coordinate,
         resolution,
         projection,
@@ -59,7 +72,7 @@ export class StreetLayerComponent implements OnInit {
 
     this.map.addLayer(wmsLayer);
 
-    this.dialogParameterStream = new Subject();
+
   }
 
 }

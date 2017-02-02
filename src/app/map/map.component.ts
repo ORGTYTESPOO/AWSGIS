@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Subject} from "rxjs";
 declare var ol: any;
 declare var isMobile: any;
 
@@ -11,10 +12,12 @@ export class MapComponent {
 
   map: any;
   showMap: boolean = false;
+  mapThemeActionStream: Subject<string>;
 
   constructor() { }
 
   ngOnInit() {
+    this.mapThemeActionStream = new Subject();
 
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
@@ -58,16 +61,17 @@ export class MapComponent {
   }
 
   getStreetMaintenanceControl() {
+    const _this = this;
+
     let streetTypeSelectionControlConfiguration = function(opt_options): void {
 
       let options = opt_options || {};
 
       let button = document.createElement('button');
-      button.innerHTML = 'YT';
+      button.innerHTML = 'KP';
 
       button.addEventListener('click', () => {
-        // TODO CHANGE THEME
-        console.log('Change maintenance theme');
+        _this.mapThemeActionStream.next('kunnossapito_opacity80');
       }, false);
 
       let element = document.getElementById('control');
@@ -86,16 +90,17 @@ export class MapComponent {
   }
 
   getStreetConditionControl() {
+    const _this = this;
+
     let streetTypeSelectionControlConfiguration = function(opt_options): void {
 
       let options = opt_options || {};
 
       let button = document.createElement('button');
-      button.innerHTML = 'KT';
+      button.innerHTML = 'K';
 
       button.addEventListener('click', () => {
-        // TODO CHANGE THEME
-        console.log('Change condition theme');
+        _this.mapThemeActionStream.next('kunto_opacity80');
       }, false);
 
       let element = document.getElementById('control');

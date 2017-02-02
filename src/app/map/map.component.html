@@ -1,4 +1,4 @@
 <template ngbModalContainer></template>
 <div id="control"></div>
 <div id="map"></div>
-<esp-street-layer *ngIf="showMap" [map]="map"></esp-street-layer>
+<esp-street-layer *ngIf="showMap" [mapThemeActionStream]="mapThemeActionStream" [map]="map"></esp-street-layer>
