@@ -27,7 +27,10 @@ export class StreetLayerComponent implements OnInit {
       if(sourceParams['STYLES'] !== mapTheme) {
         sourceParams['STYLES'] = mapTheme;
         this.wmsSource.updateParams(sourceParams);
+        this.wmsSource.refresh();
+
       }
+
     });
 
     let extent = this.map.getView().calculateExtent(this.map.getSize());
@@ -36,7 +39,7 @@ export class StreetLayerComponent implements OnInit {
       url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/wms',
       params: {
         'LAYERS': 'espoo:katu',
-        'TILED': true,
+        'TILED': true
       },
       serverType: 'geoserver'
     });
