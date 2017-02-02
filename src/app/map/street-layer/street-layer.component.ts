@@ -13,7 +13,7 @@ export class StreetLayerComponent implements OnInit {
   @Input() map: any;
   streetLayer: any;
   dialogParameterStream: Subject<any>;
-  @Input() mapThemeActionStream: Subject<string>;
+  @Input() layerSelectionActionStream: Subject<string>;
   wmsSource: ol.source.TileWMS;
 
   constructor() { }
@@ -22,15 +22,13 @@ export class StreetLayerComponent implements OnInit {
 
     this.dialogParameterStream = new Subject();
 
-    this.mapThemeActionStream.subscribe( (mapTheme: string) => {
+    this.layerSelectionActionStream.subscribe( (mapTheme: string) => {
       let sourceParams = this.wmsSource.getParams();
-      if(sourceParams['STYLES'] !== mapTheme) {
-        sourceParams['STYLES'] = mapTheme;
+      if(sourceParams['LAYERS'] !== mapTheme) {
+        sourceParams['LAYERS'] = mapTheme;
         this.wmsSource.updateParams(sourceParams);
         this.wmsSource.refresh();
-
       }
-
     });
 
     let extent = this.map.getView().calculateExtent(this.map.getSize());
@@ -38,7 +36,7 @@ export class StreetLayerComponent implements OnInit {
       // url: 'http://localhost:8080/geoserver/espoo/wms',
       url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/wms',
       params: {
-        'LAYERS': 'espoo:katu',
+        'LAYERS': 'kunto',
         'TILED': true
       },
       serverType: 'geoserver'

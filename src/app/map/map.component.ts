@@ -12,12 +12,12 @@ export class MapComponent {
 
   map: any;
   showMap: boolean = false;
-  mapThemeActionStream: Subject<string>;
+  layerSelectionActionStream: Subject<string>;
 
   constructor() { }
 
   ngOnInit() {
-    this.mapThemeActionStream = new Subject();
+    this.layerSelectionActionStream = new Subject();
 
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
@@ -71,7 +71,7 @@ export class MapComponent {
       button.innerHTML = 'KP';
 
       button.addEventListener('click', () => {
-        _this.mapThemeActionStream.next('kunnossapito_opacity80');
+        _this.layerSelectionActionStream.next('kunnossapito');
       }, false);
 
       let element = document.getElementById('control');
@@ -100,7 +100,7 @@ export class MapComponent {
       button.innerHTML = 'K';
 
       button.addEventListener('click', () => {
-        _this.mapThemeActionStream.next('kunto_opacity80');
+        _this.layerSelectionActionStream.next('kunto');
       }, false);
 
       let element = document.getElementById('control');
