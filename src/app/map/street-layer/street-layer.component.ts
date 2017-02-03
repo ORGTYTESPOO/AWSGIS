@@ -15,46 +15,40 @@ export class StreetLayerComponent implements OnInit {
   streetLayer: any;
   dialogParameterStream: Subject<any>;
   @Input() layerSelectionActionStream: Subject<string>;
-  wmsSource: ol.source.TileWMS;
-  updateSource: ol.source.TileWMS;
+  streetConditionSource: ol.source.TileWMS;
+  streetMaintenanceSource: ol.source.TileWMS;
+  streetSource: ol.source.TileWMS;
+  streetConditionLayer: ol.source.Tile;
+  streetMaintenanceLayer: ol.source.Tile;
 
   constructor() { }
 
   ngOnInit() {
-
     this.dialogParameterStream = new Subject();
 
-    this.layerSelectionActionStream.subscribe( (mapTheme: string) => {
-      let sourceParams = this.wmsSource.getParams();
-      if(sourceParams['LAYERS'] !== mapTheme) {
-        sourceParams['LAYERS'] = mapTheme;
-        this.wmsSource.updateParams(sourceParams);
-        this.wmsSource.refresh();
-      }
-    });
-
     let extent = this.map.getView().calculateExtent(this.map.getSize());
-    this.wmsSource = new ol.source.TileWMS({
-      url: environment.geoserver + '/wms',
-      params: {
-        'LAYERS': 'kunto',
-        'TILED': true
-      },
-      serverType: 'geoserver'
-    });
 
-    let wmsLayer = new ol.layer.Tile({
-      extent: extent,
-      source: this.wmsSource
-    });
+    this.streetConditionSource = this.createWMSSource('kunto');
+    this.streetMaintenanceSource = this.createWMSSource('kunnossapito');
+    this.streetSource = this.createWMSSource('katu');
 
-    this.updateSource = new ol.source.TileWMS({
-      url: environment.geoserver + '/wms',
-      params: {
-        'LAYERS': 'katu',
-        'TILED': true
-      },
-      serverType: 'geoserver'
+    this.streetConditionLayer = this.createWMSLayer(
+      'Kunto',
+      this.streetConditionSource,
+      extent,
+      true
+    );
+
+    this.streetMaintenanceLayer = this.createWMSLayer(
+      'Kunnossapito',
+      this.streetMaintenanceSource,
+      extent,
+      false
+    );
+
+    let layerGroup = new ol.layer.Group({
+      title: 'Test Group',
+      layers: [this.streetConditionLayer, this.streetMaintenanceLayer]
     });
 
     this.map.on('click', (e) => {
@@ -64,7 +58,7 @@ export class StreetLayerComponent implements OnInit {
         INFO_FORMAT: 'application/json'
       };
 
-      let url = this.updateSource.getGetFeatureInfoUrl(
+      let url = this.streetSource.getGetFeatureInfoUrl(
         e.coordinate,
         resolution,
         projection,
@@ -81,9 +75,29 @@ export class StreetLayerComponent implements OnInit {
         });
     });
 
-    this.map.addLayer(wmsLayer);
+    this.map.addLayer(this.streetConditionLayer);
+    this.map.addLayer(this.streetMaintenanceLayer);
+  }
 
+  createWMSSource(layername: string) {
+    return new ol.source.TileWMS({
+      url: environment.geoserver + '/wms',
+      params: {
+        'LAYERS': layername,
+        'TILED': true
+      },
+      serverType: 'geoserver'
+    });
+  }
 
+  createWMSLayer(title: string, source: any, extent: any, visible: boolean) {
+    return new ol.layer.Tile({
+      extent: extent,
+      source: source,
+      title: title,
+      visible: visible,
+      type: 'base'
+    });
   }
 
 }

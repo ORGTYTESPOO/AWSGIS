@@ -12,13 +12,10 @@ export class MapComponent {
 
   map: any;
   showMap: boolean = false;
-  layerSelectionActionStream: Subject<string>;
 
   constructor() { }
 
   ngOnInit() {
-    this.layerSelectionActionStream = new Subject();
-
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
     let centerCoordinate = ol.proj.fromLonLat( [centerLongitude, centerLatitude] );
@@ -55,67 +52,8 @@ export class MapComponent {
 
   initializeMap(mapConfig: any, basemapLayer: any) {
     this.showMap = true;
-    mapConfig.controls = ol.control.defaults().extend([ this.getStreetMaintenanceControl(), this.getStreetConditionControl() ]);
     this.map = new ol.Map(mapConfig);
     this.map.addLayer(basemapLayer);
+    this.map.addControl(new ol.control.LayerSwitcher());
   }
-
-  getStreetMaintenanceControl() {
-    const _this = this;
-
-    let streetTypeSelectionControlConfiguration = function(opt_options): void {
-
-      let options = opt_options || {};
-
-      let button = document.createElement('button');
-      button.innerHTML = 'KP';
-
-      button.addEventListener('click', () => {
-        _this.layerSelectionActionStream.next('kunnossapito');
-      }, false);
-
-      let element = document.getElementById('control');
-      element.className = 'street-information ol-control';
-      element.appendChild(button);
-
-      ol.control.Control.call(this, {
-        element: element,
-        target: options.target
-      });
-
-    };
-    ol.inherits(streetTypeSelectionControlConfiguration, ol.control.Control);
-
-    return new streetTypeSelectionControlConfiguration({target: 'map'});
-  }
-
-  getStreetConditionControl() {
-    const _this = this;
-
-    let streetTypeSelectionControlConfiguration = function(opt_options): void {
-
-      let options = opt_options || {};
-
-      let button = document.createElement('button');
-      button.innerHTML = 'K';
-
-      button.addEventListener('click', () => {
-        _this.layerSelectionActionStream.next('kunto');
-      }, false);
-
-      let element = document.getElementById('control');
-      element.className = 'street-information ol-control';
-      element.appendChild(button);
-
-      ol.control.Control.call(this, {
-        element: element,
-        target: options.target
-      });
-
-    };
-    ol.inherits(streetTypeSelectionControlConfiguration, ol.control.Control);
-
-    return new streetTypeSelectionControlConfiguration({target: 'map'});
-  }
-
 }
