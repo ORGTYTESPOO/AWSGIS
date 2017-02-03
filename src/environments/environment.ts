@@ -4,5 +4,7 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  geoserver: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo'
+  // geoserver: 'http://localhost:8080/geoserver/espoo'
 };

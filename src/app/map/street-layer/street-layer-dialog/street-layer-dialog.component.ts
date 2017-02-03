@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, ElementRef, ViewChild} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
 
 @Component({
@@ -65,8 +66,7 @@ export class StreetLayerDialogComponent implements OnInit {
     this.parameters.set('bbox', bbox);
 
     axios.post(
-      // 'http://localhost:8080/geoserver/espoo/ows?service=WFS&version=1.1.0&request=Transaction',
-      'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/ows?service=WFS&version=1.1.0&request=Transaction',
+      environment.geoserver + '/ows?service=WFS&version=1.1.0&request=Transaction',
       serialized,
       {
         headers: {

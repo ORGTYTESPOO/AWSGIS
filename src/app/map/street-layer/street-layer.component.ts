@@ -1,5 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {Subject} from "rxjs";
+import { environment } from '../../../environments/environment';
 import * as axios from 'axios';
 
 declare var ol: any;
@@ -34,8 +35,7 @@ export class StreetLayerComponent implements OnInit {
 
     let extent = this.map.getView().calculateExtent(this.map.getSize());
     this.wmsSource = new ol.source.TileWMS({
-      // url: 'http://localhost:8080/geoserver/espoo/wms',
-      url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/wms',
+      url: environment.geoserver + '/wms',
       params: {
         'LAYERS': 'kunto',
         'TILED': true
@@ -49,8 +49,7 @@ export class StreetLayerComponent implements OnInit {
     });
 
     this.updateSource = new ol.source.TileWMS({
-      // url: 'http://localhost:8080/geoserver/espoo/wms',
-      url: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo/wms',
+      url: environment.geoserver + '/wms',
       params: {
         'LAYERS': 'katu',
         'TILED': true
