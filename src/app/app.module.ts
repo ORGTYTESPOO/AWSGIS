@@ -8,13 +8,17 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {MapComponent} from "./map/map.component";
 import {StreetLayerDialogComponent} from "./map/street-layer/street-layer-dialog/street-layer-dialog.component";
 import {StreetLayerComponent} from "./map/street-layer/street-layer.component";
+import { PatchLayerComponent } from './map/patch-layer/patch-layer.component';
+import { PatchLayerDialogComponent } from './map/patch-layer/patch-layer-dialog/patch-layer-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     StreetLayerComponent,
-    StreetLayerDialogComponent
+    StreetLayerDialogComponent,
+    PatchLayerComponent,
+    PatchLayerDialogComponent
   ],
   imports: [
     BrowserModule,

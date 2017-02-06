@@ -14,7 +14,6 @@ export class StreetLayerComponent implements OnInit {
   @Input() map: any;
   streetLayer: any;
   dialogParameterStream: Subject<any>;
-  @Input() layerSelectionActionStream: Subject<string>;
   streetConditionSource: ol.source.TileWMS;
   streetMaintenanceSource: ol.source.TileWMS;
   streetSource: ol.source.TileWMS;
@@ -46,14 +45,8 @@ export class StreetLayerComponent implements OnInit {
       false
     );
 
-    let layerGroup = new ol.layer.Group({
-      title: 'Test Group',
-      layers: [this.streetConditionLayer, this.streetMaintenanceLayer]
-    });
-
     this.map.on('click', (e) => {
       let resolution = this.map.getView().getResolution();
-      let projection = 'EPSG:3857';
       let params = {
         INFO_FORMAT: 'application/json'
       };
@@ -61,7 +54,7 @@ export class StreetLayerComponent implements OnInit {
       let url = this.streetSource.getGetFeatureInfoUrl(
         e.coordinate,
         resolution,
-        projection,
+        environment.projection,
         params
       );
 
