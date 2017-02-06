@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {Subject} from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { environment } from '../../../environments/environment';
 import * as axios from 'axios';
 
@@ -12,6 +12,7 @@ declare var ol: any;
 export class StreetLayerComponent implements OnInit {
 
   @Input() map: any;
+  @Input() mapClickObservable: Observable<ol.MapBrowserEvent>;
   streetLayer: any;
   dialogParameterStream: Subject<any>;
   streetConditionSource: ol.source.TileWMS;
@@ -45,7 +46,7 @@ export class StreetLayerComponent implements OnInit {
       false
     );
 
-    this.map.on('click', (e) => {
+    this.mapClickObservable.subscribe((e) => {
       let resolution = this.map.getView().getResolution();
       let params = {
         INFO_FORMAT: 'application/json'

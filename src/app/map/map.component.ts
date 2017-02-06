@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Subject} from "rxjs";
+import { Observable, Subject } from "rxjs";
 declare var ol: any;
 declare var isMobile: any;
 
@@ -12,6 +12,7 @@ export class MapComponent {
 
   map: any;
   showMap: boolean = false;
+  mapClickObservable: Observable<ol.MapBrowserEvent>;
 
   constructor() { }
 
@@ -53,6 +54,7 @@ export class MapComponent {
   initializeMap(mapConfig: any, basemapLayer: any) {
     this.showMap = true;
     this.map = new ol.Map(mapConfig);
+    this.mapClickObservable = Observable.fromEvent(this.map, 'click');
     this.map.addLayer(basemapLayer);
     this.map.addControl(new ol.control.LayerSwitcher());
   }
