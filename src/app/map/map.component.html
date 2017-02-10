@@ -1,5 +1,20 @@
 <template ngbModalContainer></template>
-<div id="control"></div>
+<div id="controls" class="ol-control">
+  <button id="add-patch">A</button>
+  <button id="street-layer">K</button>
+  <button id="patch-layer">P</button>
+</div>
 <div id="map"></div>
-<esp-street-layer *ngIf="showMap" [map]="map" [mapClickObservable]="mapClickObservable"></esp-street-layer>
-<esp-patch-layer *ngIf="showMap" [map]="map" [mapClickObservable]="mapClickObservable"></esp-patch-layer>
+<esp-street-layer
+  *ngIf="showMap"
+  [map]="map"
+  [mapClickObservable]="mapClickObservable"
+  [activeLayer]="activeLayer">
+</esp-street-layer>
+<esp-patch-layer
+  *ngIf="showMap"
+  [map]="map"
+  [mapClickObservable]="mapClickObservable"
+  [addPatch]="addPatch"
+  [activeLayer]="activeLayer">
+</esp-patch-layer>

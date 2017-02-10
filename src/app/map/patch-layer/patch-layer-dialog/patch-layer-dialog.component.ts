@@ -12,6 +12,7 @@ export class PatchLayerDialogComponent implements OnInit {
 
   @ViewChild('patchDialog') patchDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
+  @Input() addPatch: boolean;
   modalRef: NgbModalRef;
   feature: ol.Feature;
   ready: boolean
@@ -28,19 +29,33 @@ export class PatchLayerDialogComponent implements OnInit {
 
   save() {
     this.feature.set('ready', this.ready);
+    this.feature.set('type', 'A');
+    this.feature.set('deleted', false);
+    this.feature.set('pavement', 'pav');
+    this.feature.set('grainsize', 4);
+    this.feature.set('kgm2', 4);
+    this.feature.set('updated', new Date().toISOString());
+    this.feature.set('comment', 'kommentti');
 
     let opts = {
       featureNS: 'espoo',
       featurePrefix: 'espoo',
-      featureType: 'paikkauskohde',
+      featureType: 'paikkauskohde3857',
       nativeElements: []
     };
 
-    this.feature.unset('geometry');
-    this.feature.unset('bbox');
+    if (!this.addPatch) {
+      this.feature.unset('geometry');
+      this.feature.unset('bbox');
+    } else {
+      this.feature.set('geom', this.feature.getGeometry());
+    }
+
+    const newFeatures = this.addPatch ? [this.feature] : [];
+    const updateFeatures = this.addPatch ? [] : [this.feature];
 
     let format = new ol.format.WFS();
-    let node = format.writeTransaction([], [this.feature], [], opts);
+    let node = format.writeTransaction(newFeatures, updateFeatures, [], opts);
     let serialized = new XMLSerializer().serializeToString(node);
 
     axios.post(
