@@ -8,21 +8,25 @@ declare var ol: any;
 
 @Component({
   selector: 'esp-patch-layer',
-  template: '<esp-patch-layer-dialog [dialogParameterStream]="dialogParameterStream" [addPatch]="addPatch"></esp-patch-layer-dialog>'
+  template: '<esp-patch-layer-dialog [dialogParameterStream]="dialogParameterStream"></esp-patch-layer-dialog>'
 })
 export class PatchLayerComponent implements OnInit {
 
   @Input() map: ol.Map;
   @Input() mapClickObservable: Observable<ol.MapBrowserEvent>;
-  @Input() addPatch: boolean;
-  @Input() activeLayer: LayerType;
   dialogParameterStream: Subject<any>;
   patchLayerSource: ol.source.TileWMS;
   patchLayer: ol.layer.Tile;
+  addPatch: boolean = false;
+  addPatchButton: Element;
+  addPatchControl: ol.control.Control;
 
   constructor() { }
 
   ngOnInit() {
+    this.addPatchButton = document.getElementById('add-patch');
+    this.addPatchControl = this.getAddPatchControl();
+
     this.dialogParameterStream = new Subject();
 
     let extent = this.map.getView().calculateExtent(this.map.getSize());
@@ -40,18 +44,31 @@ export class PatchLayerComponent implements OnInit {
     this.patchLayer = new ol.layer.Tile({
       extent: extent,
       source: this.patchLayerSource,
-      visible: true,
+      visible: false,
       title: 'Paikkauskohde',
       type: 'base'
     });
 
+    this.patchLayer.on('change:visible', () => {
+      if (this.patchLayer.getVisible()) {
+        this.map.addControl(this.addPatchControl);
+      } else {
+        this.map.removeControl(this.addPatchControl);
+        this.disableAddPatch();
+      }
+    });
+
     this.mapClickObservable.subscribe((e) => {
-      if (this.activeLayer === LayerType.Patch && this.addPatch) {
+      if (!this.patchLayer.getVisible()) {
+        return;
+      }
+
+      if (this.addPatch) {
         let feature = new ol.Feature({
           geometry: new ol.geom.Point(e.coordinate)
         });
         this.dialogParameterStream.next(feature);
-      } else if (this.activeLayer === LayerType.Patch) {
+      } else {
         let resolution = this.map.getView().getResolution();
         let params = {
           INFO_FORMAT: 'application/json'
@@ -78,4 +95,39 @@ export class PatchLayerComponent implements OnInit {
     this.map.addLayer(this.patchLayer);
   }
 
+  getAddPatchControl() {
+    const _this = this;
+
+    let addPatchControlConfig = function(opt_options): void {
+      let options = opt_options || {};
+
+      let button = document.getElementById('add-patch');
+      let element = document.getElementById('controls');
+      button.addEventListener('click', () => {
+        if (_this.addPatch) {
+          _this.disableAddPatch.call(_this);
+        } else {
+          _this.enabledAddPatch.call(_this);
+        }
+      }, false);
+
+      ol.control.Control.call(this, {
+        element: element,
+        target: options.target
+      });
+    };
+    ol.inherits(addPatchControlConfig, ol.control.Control);
+
+    return new addPatchControlConfig({target: 'map'});
+  }
+
+  enabledAddPatch() {
+    this.addPatch = true;
+    this.addPatchButton.classList.add('selected');
+  }
+
+  disableAddPatch() {
+    this.addPatch = false;
+    this.addPatchButton.classList.remove('selected');
+  }
 }

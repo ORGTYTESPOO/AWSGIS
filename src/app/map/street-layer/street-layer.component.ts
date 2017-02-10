@@ -14,14 +14,13 @@ export class StreetLayerComponent implements OnInit {
 
   @Input() map: any;
   @Input() mapClickObservable: Observable<ol.MapBrowserEvent>;
-  @Input() activeLayer: LayerType;
   streetLayer: any;
   dialogParameterStream: Subject<any>;
   streetConditionSource: ol.source.TileWMS;
   streetMaintenanceSource: ol.source.TileWMS;
   streetSource: ol.source.TileWMS;
-  streetConditionLayer: ol.source.Tile;
-  streetMaintenanceLayer: ol.source.Tile;
+  streetConditionLayer: ol.layer.Tile;
+  streetMaintenanceLayer: ol.layer.Tile;
 
   constructor() { }
 
@@ -49,7 +48,10 @@ export class StreetLayerComponent implements OnInit {
     );
 
     this.mapClickObservable.subscribe((e) => {
-      if (this.activeLayer !== LayerType.Street) {
+      const isVisible = this.streetConditionLayer.getVisible()
+        || this.streetMaintenanceLayer.getVisible();
+
+      if (!isVisible) {
         return;
       }
 
