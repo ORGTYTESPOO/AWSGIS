@@ -19,9 +19,17 @@ export class MapComponent {
   addPatch: boolean = false;
   activeLayer: LayerType = LayerType.Street;
 
+  addPatchButton: Element;
+  streetLayerButton: Element;
+  patchLayerButton: Element;
+
   constructor() { }
 
   ngOnInit() {
+    this.addPatchButton = document.getElementById('add-patch');
+    this.streetLayerButton = document.getElementById('street-layer');
+    this.patchLayerButton = document.getElementById('patch-layer');
+
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
     let centerCoordinate = ol.proj.fromLonLat( [centerLongitude, centerLatitude] );
@@ -117,34 +125,26 @@ export class MapComponent {
   enableStreetLayer() {
     this.activeLayer = LayerType.Street;
     this.disableAddPatch();
-    const streetLayerButton = document.getElementById('street-layer');
-    const patchLayerButton = document.getElementById('patch-layer');
-    streetLayerButton.classList.add('selected');
-    patchLayerButton.classList.remove('selected');
+    this.streetLayerButton.classList.add('selected');
+    this.patchLayerButton.classList.remove('selected');
   }
 
   enablePatchLayer() {
     this.activeLayer = LayerType.Patch;
-    const streetLayerButton = document.getElementById('street-layer');
-    const patchLayerButton = document.getElementById('patch-layer');
-    streetLayerButton.classList.remove('selected');
-    patchLayerButton.classList.add('selected');
+    this.streetLayerButton.classList.remove('selected');
+    this.patchLayerButton.classList.add('selected');
   }
 
   enabledAddPatch() {
     this.addPatch = true;
     this.activeLayer = LayerType.Patch;
-    const addPatchButton = document.getElementById('add-patch');
-    const patchLayerButton = document.getElementById('patch-layer');
-    const streetLayerButton = document.getElementById('street-layer');
-    addPatchButton.classList.add('selected');
-    patchLayerButton.classList.add('selected');
-    streetLayerButton.classList.remove('selected');
+    this.addPatchButton.classList.add('selected');
+    this.patchLayerButton.classList.add('selected');
+    this.streetLayerButton.classList.remove('selected');
   }
 
   disableAddPatch() {
     this.addPatch = false;
-    const addPatchButton = document.getElementById('add-patch');
-    addPatchButton.classList.remove('selected');
+    this.addPatchButton.classList.remove('selected');
   }
 }

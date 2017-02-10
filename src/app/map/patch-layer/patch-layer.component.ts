@@ -46,7 +46,6 @@ export class PatchLayerComponent implements OnInit {
     });
 
     this.mapClickObservable.subscribe((e) => {
-      console.log(e.coordinate);
       if (this.activeLayer === LayerType.Patch && this.addPatch) {
         let feature = new ol.Feature({
           geometry: new ol.geom.Point(e.coordinate)
