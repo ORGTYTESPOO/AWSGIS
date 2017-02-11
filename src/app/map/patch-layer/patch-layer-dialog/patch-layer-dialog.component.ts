@@ -15,34 +15,39 @@ export class PatchLayerDialogComponent implements OnInit {
   @Input() addPatch: boolean;
   modalRef: NgbModalRef;
   feature: ol.Feature;
-  ready: boolean
+  properties: Object;
 
   constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
     this.dialogParameterStream.subscribe((feature: ol.Feature) => {
       this.feature = feature;
-      this.ready = feature.get('ready');
+      this.properties = this.getProperties(feature);
       this.modalRef = this.modalService.open(this.patchDialog, feature);
     });
   }
 
-  save() {
-    this.feature.set('ready', this.ready);
+  getProperties(feature: ol.Feature): Object {
+    return {
+      ready: feature.get('ready') || false,
+      pavement: feature.get('pavement'),
+      comment: feature.get('comment') || ''
+    };
+  }
+
+  assignProperties(): void {
+    this.feature.set('ready', this.properties['ready']);
     this.feature.set('type', 'A');
     this.feature.set('deleted', false);
-    this.feature.set('pavement', 'pav');
+    this.feature.set('pavement', this.properties['pavement']);
     this.feature.set('grainsize', 4);
     this.feature.set('kgm2', 4);
     this.feature.set('updated', new Date().toISOString());
-    this.feature.set('comment', 'kommentti');
+    this.feature.set('comment', this.properties['comment']);
+  }
 
-    let opts = {
-      featureNS: 'espoo',
-      featurePrefix: 'espoo',
-      featureType: 'paikkauskohde3857',
-      nativeElements: []
-    };
+  save() {
+    this.assignProperties();
 
     if (!this.addPatch) {
       this.feature.unset('geometry');
@@ -53,9 +58,27 @@ export class PatchLayerDialogComponent implements OnInit {
 
     const newFeatures = this.addPatch ? [this.feature] : [];
     const updateFeatures = this.addPatch ? [] : [this.feature];
+    this.sendRequest(newFeatures, updateFeatures, []);
+  }
+
+  delete() {
+    this.assignProperties();
+    this.feature.set('deleted', true);
+    this.feature.unset('geometry');
+    this.feature.unset('bbox');
+    this.sendRequest([], [this.feature], []);
+  }
+
+  sendRequest(created: Array<ol.Feature>, updated: Array<ol.Feature>, deleted: Array<ol.Feature>): void {
+    let opts = {
+      featureNS: 'espoo',
+      featurePrefix: 'espoo',
+      featureType: 'paikkauskohde3857',
+      nativeElements: []
+    };
 
     let format = new ol.format.WFS();
-    let node = format.writeTransaction(newFeatures, updateFeatures, [], opts);
+    let node = format.writeTransaction(created, updated, deleted, opts);
     let serialized = new XMLSerializer().serializeToString(node);
 
     axios.post(
@@ -73,7 +96,5 @@ export class PatchLayerDialogComponent implements OnInit {
     .catch((err) => {
       console.log(err);
     });
-
   }
-
 }
