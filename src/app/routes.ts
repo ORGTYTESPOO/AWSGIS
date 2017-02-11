@@ -1,7 +1,7 @@
 
-import {MapComponent} from "./map/map.component";
+import {MapComponent} from "./components/map/map.component";
 
 export const Routes = [
-  { path: '', component: MapComponent },
-  { path: '**', component: MapComponent}
+  { path: 'home', component: MapComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full'},
 ];

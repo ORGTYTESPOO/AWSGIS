@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <button class="btn btn-secondary" (click)="toggleReport()">Show report</button>
+  <div class="row">
+    <div class="col" *ngIf="(!showReport) || (showReport && !userAgentService.isMobileDevice()) ">
+      <div id="map"></div>
+      <esp-street-layer *ngIf="showMap" [map]="map" [mapClickObservable]="mapClickObservable"></esp-street-layer>
+      <esp-patch-layer *ngIf="showMap" [map]="map" [mapClickObservable]="mapClickObservable"></esp-patch-layer>
+    </div>
+
+    <div class="col" *ngIf="showReport">
+      <h3>Report area</h3>
+    </div>
+
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subject } from "rxjs";
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 import * as axios from 'axios';
 
 @Component({
@@ -14,7 +14,7 @@ export class PatchLayerDialogComponent implements OnInit {
   @Input() dialogParameterStream: Subject<any>;
   modalRef: NgbModalRef;
   feature: ol.Feature;
-  ready: boolean
+  ready: boolean;
 
   constructor(private modalService: NgbModal) { }
 

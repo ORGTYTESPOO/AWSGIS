@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable, Subject } from "rxjs";
-import { environment } from '../../../environments/environment';
-import * as axios from 'axios';
+import { environment } from '../../../../environments/environment';
 
 declare var ol: any;
 
