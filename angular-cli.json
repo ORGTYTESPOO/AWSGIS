@@ -20,13 +20,11 @@
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/openlayers/dist/ol.css",
-        "../node_modules/ol3-layerswitcher/src/ol3-layerswitcher.css",
         "styles.less"
       ],
       "scripts": [
         "../node_modules/openlayers/dist/ol.js",
-        "../node_modules/ismobilejs/isMobile.min.js",
-        "../node_modules/ol3-layerswitcher/src/ol3-layerswitcher.js"
+        "../node_modules/ismobilejs/isMobile.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",

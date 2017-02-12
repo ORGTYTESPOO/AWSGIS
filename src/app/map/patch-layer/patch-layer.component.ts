@@ -8,7 +8,7 @@ declare var ol: any;
 
 @Component({
   selector: 'esp-patch-layer',
-  template: '<esp-patch-layer-dialog [dialogParameterStream]="dialogParameterStream" [addPatch]="addPatch"></esp-patch-layer-dialog>'
+  template: '<esp-patch-layer-dialog [dialogParameterStream]="dialogParameterStream" [addPatch]="addPatch" [afterAdd]="disableAddPatch.bind(this)"></esp-patch-layer-dialog>'
 })
 export class PatchLayerComponent implements OnInit {
 

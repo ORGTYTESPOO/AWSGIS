@@ -59,6 +59,53 @@ export class MapComponent {
     this.map = new ol.Map(mapConfig);
     this.mapClickObservable = Observable.fromEvent(this.map, 'click');
     this.map.addLayer(basemapLayer);
-    this.map.addControl(new ol.control.LayerSwitcher());
- }
+    this.map.addControl(this.getLayerSwitcherControl());
+  }
+
+  redrawLayerSwitcher(e) {
+    const select = document.getElementById('layer-switcher');
+    select.innerHTML = "";
+    this.map.getLayers().forEach((layer) => {
+      const title = layer.get('title');
+      if (title) {
+        const option = document.createElement('option');
+        option.value = title;
+        option.innerHTML = title;
+
+        if (layer.getVisible()) {
+          option.selected = true;
+        }
+
+        select.appendChild(option);
+      }
+    });
+  }
+
+  getLayerSwitcherControl() {
+    this.map.getLayers().on('add', this.redrawLayerSwitcher, this);
+    this.map.getLayers().on('remove', this.redrawLayerSwitcher, this);
+
+    const _this = this;
+    let layerSwitcherControl = function(opt_options): void {
+      let options = opt_options || {};
+
+      let select = document.getElementById('layer-switcher');
+      select.addEventListener('change', (e) => {
+        _this.map.getLayers().forEach((layer) => {
+          const title = layer.get('title');
+          if (title) {
+            layer.setVisible(title === e.target['value']);
+          }
+        });
+      });
+
+      ol.control.Control.call(this, {
+        element: select,
+        target: options.target
+      });
+    };
+    ol.inherits(layerSwitcherControl, ol.control.Control);
+
+    return new layerSwitcherControl({target: 'map'});
+  }
 }
