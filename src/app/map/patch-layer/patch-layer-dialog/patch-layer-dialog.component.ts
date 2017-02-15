@@ -4,6 +4,35 @@ import { Observable, Subject } from "rxjs";
 import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
 
+/**
+ * Hardcoded list of pavement types and related values combined together.
+ *
+ * Splitting the value by space (' ') can result into 3 parts:
+ *   0: pavement type,
+ *   1: grain size,
+ *   2: kgm2
+ */
+const PAVEMENT_TYPES = [
+  'SMA 11',
+  'SMA 16',
+  'AB 11',
+  'AB 16',
+  'AB 22',
+  'AB 11/100',
+  'AB 16/125',
+  'AB 22/125',
+  'ABK 31/125',
+  'ABK 31/150',
+  'PAB-B 16/125',
+  'SIP/SOP',
+  'Pintaus',
+  'Uraremix',
+  'AA 8/75',
+  'AA 11/90'
+];
+
+const DEFAULT_PAVEMENT_TYPE = 'AB 11/100';
+
 @Component({
   selector: 'esp-patch-layer-dialog',
   templateUrl: './patch-layer-dialog.component.html'
@@ -17,6 +46,7 @@ export class PatchLayerDialogComponent implements OnInit {
   modalRef: NgbModalRef;
   feature: ol.Feature;
   properties: Object;
+  pavementTypes: Array<String> = PAVEMENT_TYPES;
 
   constructor(private modalService: NgbModal) { }
 
@@ -29,20 +59,47 @@ export class PatchLayerDialogComponent implements OnInit {
   }
 
   getProperties(feature: ol.Feature): Object {
+    // Create combined pavement string
+    const pavement = feature.get('pavement') || '';
+    const grainSize = feature.get('grainsize') || '';
+    const kgm2 = feature.get('kgm2') || '';
+
+    let pavementCombined = '';
+    if (pavement) {
+      const parts = [pavement];
+
+      if (grainSize && kgm2) {
+        parts.push(`${grainSize}/${kgm2}`);
+      } else if (grainSize) {
+        parts.push(grainSize)
+      }
+
+      pavementCombined = parts.join(' ');
+    }
+
     return {
       ready: feature.get('ready') || false,
-      pavement: feature.get('pavement'),
-      comment: feature.get('comment') || ''
+      comment: feature.get('comment') || '',
+      pavementCombined: pavementCombined || DEFAULT_PAVEMENT_TYPE
     };
   }
 
   assignProperties(): void {
+    // Split the combined pavement string into individual properties
+    const pavementCombined = this.properties['pavementCombined'];
+    const [pavement, grainSizeKgm2] = pavementCombined.split(' ');
+    let grainSize, kgm2 = '';
+
+    if (grainSizeKgm2) {
+      [grainSize, kgm2] = grainSizeKgm2.split('/');
+    }
+
     this.feature.set('ready', this.properties['ready']);
     this.feature.set('type', 'A');
     this.feature.set('deleted', false);
-    this.feature.set('pavement', this.properties['pavement']);
-    this.feature.set('grainsize', 4);
-    this.feature.set('kgm2', 4);
+    this.feature.set('pavement', pavement);
+    this.feature.set('grainsize', grainSize || null);
+    this.feature.set('kgm2', kgm2 || null);
     this.feature.set('updated', new Date().toISOString());
     this.feature.set('comment', this.properties['comment']);
   }
@@ -51,6 +108,7 @@ export class PatchLayerDialogComponent implements OnInit {
     this.assignProperties();
 
     if (!this.addPatch) {
+      this.feature.set('geom', this.feature.getGeometry());
       this.feature.unset('geometry');
       this.feature.unset('bbox');
     } else {
@@ -59,18 +117,19 @@ export class PatchLayerDialogComponent implements OnInit {
 
     const newFeatures = this.addPatch ? [this.feature] : [];
     const updateFeatures = this.addPatch ? [] : [this.feature];
-    this.sendRequest(newFeatures, updateFeatures, []);
+    this.sendRequest(newFeatures, updateFeatures);
   }
 
   delete() {
     this.assignProperties();
     this.feature.set('deleted', true);
+    this.feature.set('geom', this.feature.getGeometry());
     this.feature.unset('geometry');
     this.feature.unset('bbox');
-    this.sendRequest([], [this.feature], []);
+    this.sendRequest([], [this.feature]);
   }
 
-  sendRequest(created: Array<ol.Feature>, updated: Array<ol.Feature>, deleted: Array<ol.Feature>): void {
+  sendRequest(created: Array<ol.Feature>, updated: Array<ol.Feature>): void {
     let opts = {
       featureNS: 'espoo',
       featurePrefix: 'espoo',
@@ -79,7 +138,7 @@ export class PatchLayerDialogComponent implements OnInit {
     };
 
     let format = new ol.format.WFS();
-    let node = format.writeTransaction(created, updated, deleted, opts);
+    let node = format.writeTransaction(created, updated, [], opts);
     let serialized = new XMLSerializer().serializeToString(node);
 
     axios.post(

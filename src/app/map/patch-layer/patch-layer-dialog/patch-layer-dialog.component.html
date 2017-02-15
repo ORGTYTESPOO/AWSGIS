@@ -14,10 +14,8 @@
         </div>
         <div class="row">
           <label class="col-form-label">Asfalttilaji</label>
-          <select class="form-control" [(ngModel)]="properties.pavement">
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
+          <select class="form-control" [(ngModel)]="properties.pavementCombined">
+            <option *ngFor="let type of pavementTypes" [ngValue]="type">{{type}}</option>
           </select>
         </div>
         <div class="row">

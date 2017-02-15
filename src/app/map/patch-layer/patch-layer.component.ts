@@ -16,6 +16,7 @@ export class PatchLayerComponent implements OnInit {
   @Input() mapClickObservable: Observable<ol.MapBrowserEvent>;
   dialogParameterStream: Subject<any>;
   patchLayerSource: ol.source.TileWMS;
+  patchLayerUpdateSource: ol.source.TileWMS;
   patchLayer: ol.layer.Tile;
   addPatch: boolean = false;
   addPatchButton: Element;
@@ -32,6 +33,16 @@ export class PatchLayerComponent implements OnInit {
     let extent = this.map.getView().calculateExtent(this.map.getSize());
 
     this.patchLayerSource = new ol.source.TileWMS({
+      url: environment.geoserver + '/wms',
+      params: {
+        LAYERS: 'paikkauskohde_deleted_false',
+        TILED: true
+      },
+      projection: environment.projection,
+      serverType: 'geoserver'
+    });
+
+    this.patchLayerUpdateSource = new ol.source.TileWMS({
       url: environment.geoserver + '/wms',
       params: {
         LAYERS: 'paikkauskohde3857',
@@ -74,7 +85,7 @@ export class PatchLayerComponent implements OnInit {
           INFO_FORMAT: 'application/json'
         };
 
-        let url = this.patchLayerSource.getGetFeatureInfoUrl(
+        let url = this.patchLayerUpdateSource.getGetFeatureInfoUrl(
           e.coordinate,
           resolution,
           environment.projection,
