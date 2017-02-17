@@ -7,10 +7,8 @@ import './rxjs-operators';
 })
 export class AppComponent {
 
-
   constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }
