@@ -7,8 +7,8 @@
       <esp-patch-layer *ngIf="showMap" [map]="map" [mapClickObservable]="mapClickObservable"></esp-patch-layer>
     </div>
 
-    <div class="col-8" *ngIf="showReport">
-      <iframe width="100%" height="100%" src="https://app.powerbi.com/view?r=eyJrIjoiMWZhYzY5NDQtODllMy00NTlkLTlhYTYtNTI3NDJhY2VmMzkyIiwidCI6IjZiYjA0MjI4LWNmYTUtNDIxMy05ZjM5LTE3MjQ1NGQ4MjU4NCIsImMiOjh9" frameborder="0" allowFullScreen="true"></iframe>
+    <div class="col" *ngIf="showReport">
+      <h3>Report area</h3>
     </div>
 
   </div>
