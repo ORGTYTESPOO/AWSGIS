@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  geoserver: 'http://geoserver-lb-1359047372.eu-west-1.elb.amazonaws.com/geoserver/espoo',
+  geoserver: 'https://geoserver.espooinfrao.com/geoserver/espoo',
   // geoserver: 'http://localhost:8080/geoserver/espoo',
   projection: 'EPSG:3857'
 };
