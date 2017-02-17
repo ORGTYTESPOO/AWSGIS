@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, ElementRef, ViewChild} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import { environment } from '../../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
 
 @Component({
