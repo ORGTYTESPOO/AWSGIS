@@ -18,6 +18,7 @@ export class MapComponent {
   showMap: boolean = false;
   mapClickObservable: Observable<ol.MapBrowserEvent>;
   showLegend: boolean = true;
+  isReportVisible: boolean = false;
 
   constructor() { }
 
@@ -62,6 +63,7 @@ export class MapComponent {
     this.mapClickObservable = Observable.fromEvent(this.map, 'click');
     this.map.addLayer(basemapLayer);
     this.map.addControl(this.getLayerSwitcherControl());
+    this.map.addControl(this.getReportToggleControl());
     this.initializeLegend();
   }
 
@@ -123,6 +125,41 @@ export class MapComponent {
       }
     });
   }
+
+  /*
+   * @description: Report toggle control
+   */
+  getReportToggleControl() {
+    const _this = this;
+
+    let reportToggleControl = function(opt_options): void {
+      let options = opt_options || {};
+
+      const reportToggleButton = document.getElementById('report-holder');
+      reportToggleButton.addEventListener('click', (event: any) => {
+        _this.toggleReport();
+      });
+
+      ol.control.Control.call(this, {
+        element: reportToggleButton,
+        target: options.target
+      });
+
+    };
+
+    ol.inherits(reportToggleControl, ol.control.Control);
+    return new reportToggleControl({target: 'map'});
+  }
+
+  toggleReport(): void {
+    this.isReportVisible = !this.isReportVisible;
+
+    setTimeout( () => { // update map size after on the next
+      this.map.updateSize();
+    },0);
+  }
+
+
 
   getLayerSwitcherControl() {
     this.map.getLayers().on('add', this.redrawLayerSwitcher, this);
