@@ -1,8 +1,10 @@
-import { Component, Output } from '@angular/core';
-import { Observable, Subject } from "rxjs";
-import { LayerType } from './layertype';
-import { environment } from '../../environments/environment';
+import {Component, Output} from '@angular/core';
+import {Observable, Subject} from "rxjs";
+import {LayerType} from './layertype';
+import {environment} from '../../environments/environment';
 import * as axios from 'axios';
+import {UserAgentService} from "../useragent.service";
+import {Router} from "@angular/router";
 
 declare var ol: any;
 declare var isMobile: any;
@@ -20,13 +22,14 @@ export class MapComponent {
   showLegend: boolean = true;
   isReportVisible: boolean = false;
 
-  constructor() { }
+  constructor(private userAgentService: UserAgentService, private router: Router) {
+  }
 
   ngOnInit() {
     const centerLongitude = 24.82;
     const centerLatitude = 60.228;
-    let centerCoordinate = ol.proj.fromLonLat( [centerLongitude, centerLatitude] );
-    let basemapLayer = new ol.layer.Tile( { source: new ol.source.OSM() });
+    let centerCoordinate = ol.proj.fromLonLat([centerLongitude, centerLatitude]);
+    let basemapLayer = new ol.layer.Tile({source: new ol.source.OSM()});
 
     let defaultMapConfig = {
       target: 'map',
@@ -36,8 +39,8 @@ export class MapComponent {
       })
     };
 
-    if(isMobile.any && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition( (result) => {
+    if (isMobile.any && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((result) => {
         centerCoordinate = ol.proj.fromLonLat([result.coords.longitude, result.coords.latitude]);
 
         const geolocatedMapConfig = {
@@ -132,7 +135,7 @@ export class MapComponent {
   getReportToggleControl() {
     const _this = this;
 
-    let reportToggleControl = function(opt_options): void {
+    let reportToggleControl = function (opt_options): void {
       let options = opt_options || {};
 
       const reportToggleButton = document.getElementById('report-holder');
@@ -152,13 +155,18 @@ export class MapComponent {
   }
 
   toggleReport(): void {
-    this.isReportVisible = !this.isReportVisible;
 
-    setTimeout( () => { // update map size after on the next
-      this.map.updateSize();
-    },0);
+    if (this.userAgentService.isMobileDevice()) {
+      this.router.navigate(['/report']);
+    } else {
+
+      this.isReportVisible = !this.isReportVisible;
+
+      setTimeout(() => { // update map size after on the next
+        this.map.updateSize();
+      }, 0);
+    }
   }
-
 
 
   getLayerSwitcherControl() {
@@ -166,7 +174,7 @@ export class MapComponent {
     this.map.getLayers().on('remove', this.redrawLayerSwitcher, this);
 
     const _this = this;
-    let layerSwitcherControl = function(opt_options): void {
+    let layerSwitcherControl = function (opt_options): void {
       let options = opt_options || {};
 
       let select = document.getElementById('layer-switcher');

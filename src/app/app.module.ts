@@ -12,6 +12,8 @@ import { PatchLayerComponent } from './map/patch-layer/patch-layer.component';
 import { PatchLayerDialogComponent } from './map/patch-layer/patch-layer-dialog/patch-layer-dialog.component';
 import {Routes} from "./routes";
 import {RouterModule} from "@angular/router";
+import { ReportComponent } from './report/report.component';
+import {UserAgentService} from "./useragent.service";
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import {RouterModule} from "@angular/router";
     StreetLayerComponent,
     StreetLayerDialogComponent,
     PatchLayerComponent,
-    PatchLayerDialogComponent
+    PatchLayerDialogComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,7 @@ import {RouterModule} from "@angular/router";
     NgbModule.forRoot(),
     RouterModule.forRoot(Routes)
   ],
-  providers: [],
+  providers: [UserAgentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
