@@ -10,6 +10,8 @@ import {StreetLayerDialogComponent} from "./map/street-layer/street-layer-dialog
 import {StreetLayerComponent} from "./map/street-layer/street-layer.component";
 import { PatchLayerComponent } from './map/patch-layer/patch-layer.component';
 import { PatchLayerDialogComponent } from './map/patch-layer/patch-layer-dialog/patch-layer-dialog.component';
+import {Routes} from "./routes";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { PatchLayerDialogComponent } from './map/patch-layer/patch-layer-dialog/
   imports: [
     BrowserModule,
     FormsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    RouterModule.forRoot(Routes)
   ],
   providers: [],
   bootstrap: [AppComponent]
