@@ -2,6 +2,7 @@ import { Component, Output } from '@angular/core';
 import { Observable, Subject } from "rxjs";
 import { LayerType } from './layertype';
 import { environment } from '../../environments/environment';
+import * as axios from 'axios';
 
 declare var ol: any;
 declare var isMobile: any;
@@ -16,6 +17,7 @@ export class MapComponent {
   map: any;
   showMap: boolean = false;
   mapClickObservable: Observable<ol.MapBrowserEvent>;
+  showLegend: boolean = true;
 
   constructor() { }
 
@@ -60,6 +62,47 @@ export class MapComponent {
     this.mapClickObservable = Observable.fromEvent(this.map, 'click');
     this.map.addLayer(basemapLayer);
     this.map.addControl(this.getLayerSwitcherControl());
+    this.initializeLegend();
+  }
+
+  initializeLegend() {
+    const getLegend = (layer) => {
+      const source = layer.getSource();
+      const layerName = source.getParams()['LAYERS'];
+      const url = `${environment.geoserver}/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&FORMAT=image%2Fpng&LAYER=espoo:${layerName}`;
+      const legend = document.getElementById('legend');
+      const img = document.createElement('img');
+      img.setAttribute('src', url);
+      legend.innerHTML = "";
+      legend.appendChild(img);
+    };
+
+    const visibleHandler = (e) => {
+      const layer = e.target;
+      if (layer.getVisible() && layer.get('title')) {
+        getLegend(layer);
+      }
+    };
+
+    // Keep track of layers which already have the handler
+    let events = {};
+    const layers = this.map.getLayers();
+
+    const addHandlers = () => {
+      layers.forEach((layer: ol.layer.Base) => {
+        const title = layer.get('title');
+        if (title && !events[title]) {
+          layer.on('change:visible', visibleHandler);
+          events[title] = true;
+
+          if (layer.getVisible()) {
+            getLegend(layer);
+          }
+        }
+      });
+    };
+
+    layers.on('add', addHandlers);
   }
 
   redrawLayerSwitcher(e) {
