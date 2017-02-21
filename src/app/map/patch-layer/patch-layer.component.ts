@@ -80,26 +80,78 @@ export class PatchLayerComponent implements OnInit {
         });
         this.dialogParameterStream.next(feature);
       } else {
-        let resolution = this.map.getView().getResolution();
-        let params = {
-          INFO_FORMAT: 'application/json'
+        const getBufferValue = () => {
+          const MAX_ZOOM = 21;
+          const MIN_ZOOM = 14;
+          const zoomLevel = Math.floor(this.map.getView().getZoom());
+
+          if (!zoomLevel || zoomLevel > MAX_ZOOM) {
+            return 1;
+          } else if (zoomLevel < MIN_ZOOM) {
+            return 200;
+          }
+
+          // Fibonacci sequence seems to generate quite good buffer value :)
+          const target = 21 - zoomLevel;
+          let last = 1;
+          let current = 1;
+
+          for (let i = 0; i < target; i++) {
+            let tmp = current;
+            current = last + current;
+            last = current;
+          }
+
+          return current;
         };
 
-        let url = this.patchLayerUpdateSource.getGetFeatureInfoUrl(
-          e.coordinate,
-          resolution,
-          environment.projection,
-          params
-        );
+        const bufferValue = getBufferValue();
+        const initialExtent = ol.extent.boundingExtent([e.coordinate]);
+        const bufferedExtent = ol.extent.buffer(initialExtent, bufferValue);
 
-        axios.get(url)
-          .then((res) => {
+        const options = {
+          featureNS: 'espoo',
+          featurePrefix: 'espoo',
+          featureTypes: ['paikkauskohde3857'],
+          srsName: environment.projection,
+          outputFormat: 'application/json',
+          bbox: bufferedExtent,
+          geometryName: 'geom'
+        };
+
+        const format = new ol.format.WFS();
+        const node = format.writeGetFeature(options);
+        let serialized = new XMLSerializer().serializeToString(node);
+
+        axios.post(
+          environment.geoserver + '/ows?service=WFS',
+          serialized,
+          {
+            headers: {
+              'Content-Type': 'text/xml'
+            }
+          }
+        ).then(res => {
             let format = new ol.format.GeoJSON();
             let features = format.readFeatures(res.data);
             if (features.length > 0) {
-              this.dialogParameterStream.next(features[0]);
+              const wgs84Radius = 6378137;
+              const wgs84Sphere = new ol.Sphere(wgs84Radius);
+              const clickCoord = ol.proj.transform(e.coordinate, environment.projection, 'EPSG:4326');
+
+              // Find the feature closest to the click event
+              const closestFeature = features.reduce((acc, current) => {
+                const coordinates  = current.getGeometry().getCoordinates();
+                const featureCoord = ol.proj.transform(coordinates, environment.projection, 'EPSG:4326');
+                const distance = wgs84Sphere.haversineDistance(clickCoord, featureCoord);
+                return (acc && acc.distance < distance)
+                  ? acc
+                  : { distance, feature: current }
+              }, undefined);
+
+              this.dialogParameterStream.next(closestFeature.feature);
             }
-          });
+        });
       }
     });
 
