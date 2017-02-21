@@ -63,7 +63,7 @@ export class MapComponent {
   initializeMap(mapConfig: any, basemapLayer: any) {
     this.showMap = true;
     this.map = new ol.Map(mapConfig);
-    this.mapClickObservable = Observable.fromEvent(this.map, 'click');
+    this.mapClickObservable = Observable.fromEvent(this.map, 'singleclick');
     this.map.addLayer(basemapLayer);
     this.map.addControl(this.getLayerSwitcherControl());
     this.map.addControl(this.getReportToggleControl());
