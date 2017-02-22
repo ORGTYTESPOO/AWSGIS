@@ -27,8 +27,6 @@ export class StreetLayerComponent implements OnInit {
   ngOnInit() {
     this.dialogParameterStream = new Subject();
 
-    let extent = this.map.getView().calculateExtent(this.map.getSize());
-
     this.streetConditionSource = this.createWMSSource('kunto');
     this.streetMaintenanceSource = this.createWMSSource('kunnossapito');
     this.streetSource = this.createWMSSource('katu');
@@ -36,14 +34,12 @@ export class StreetLayerComponent implements OnInit {
     this.streetConditionLayer = this.createWMSLayer(
       'Kunto',
       this.streetConditionSource,
-      extent,
       true
     );
 
     this.streetMaintenanceLayer = this.createWMSLayer(
       'Kunnossapito',
       this.streetMaintenanceSource,
-      extent,
       false
     );
 
@@ -92,9 +88,8 @@ export class StreetLayerComponent implements OnInit {
     });
   }
 
-  createWMSLayer(title: string, source: any, extent: any, visible: boolean) {
+  createWMSLayer(title: string, source: any, visible: boolean) {
     return new ol.layer.Tile({
-      extent: extent,
       source: source,
       title: title,
       visible: visible,

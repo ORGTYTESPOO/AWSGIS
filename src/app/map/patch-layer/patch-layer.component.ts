@@ -30,8 +30,6 @@ export class PatchLayerComponent implements OnInit {
 
     this.dialogParameterStream = new Subject();
 
-    let extent = this.map.getView().calculateExtent(this.map.getSize());
-
     this.patchLayerSource = new ol.source.TileWMS({
       url: environment.geoserver + '/wms',
       params: {
@@ -53,7 +51,6 @@ export class PatchLayerComponent implements OnInit {
     });
 
     this.patchLayer = new ol.layer.Tile({
-      extent: extent,
       source: this.patchLayerSource,
       visible: false,
       title: 'Paikkauskohde',
