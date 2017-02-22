@@ -57,7 +57,8 @@ export class PatchLayerComponent implements OnInit {
       source: this.patchLayerSource,
       visible: false,
       title: 'Paikkauskohde',
-      type: 'base'
+      type: 'base',
+      zIndex: 1
     });
 
     this.patchLayer.on('change:visible', () => {

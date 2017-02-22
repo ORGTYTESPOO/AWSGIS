@@ -98,7 +98,8 @@ export class StreetLayerComponent implements OnInit {
       source: source,
       title: title,
       visible: visible,
-      type: 'base'
+      type: 'base',
+      zIndex: 1
     });
   }
 
