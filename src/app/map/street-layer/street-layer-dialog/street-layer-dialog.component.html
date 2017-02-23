@@ -10,6 +10,7 @@
     <p *ngIf="success">Tallennus onnistui!</p>
     <p>{{properties.id}}</p>
     <p>{{properties.name}}</p>
+    <p>Päivitetty: {{properties.updated | date:'dd.MM.yyyy'}}</p>
     <select class="custom-select" [(ngModel)]="properties.worstura">
       <option *ngFor="let condition of conditionOptions" [ngValue]="condition.value">{{condition.label}}</option>
     </select>

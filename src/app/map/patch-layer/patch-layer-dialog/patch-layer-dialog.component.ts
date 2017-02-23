@@ -82,7 +82,8 @@ export class PatchLayerDialogComponent implements OnInit {
     return {
       ready: feature.get('ready') || false,
       comment: feature.get('comment') || '',
-      pavementCombined: pavementCombined || DEFAULT_PAVEMENT_TYPE
+      pavementCombined: pavementCombined || DEFAULT_PAVEMENT_TYPE,
+      updated: feature.get('updated')
     };
   }
 

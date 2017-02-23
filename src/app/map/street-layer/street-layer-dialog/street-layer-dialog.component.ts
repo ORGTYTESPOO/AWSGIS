@@ -58,6 +58,8 @@ export class StreetLayerDialogComponent implements OnInit {
     this.parameters.unset('geometry');
     this.parameters.unset('bbox');
 
+    this.parameters.set('updated', new Date().toISOString());
+
     let format = new ol.format.WFS();
     let node = format.writeTransaction([], [this.parameters], [], opts);
     let serialized = new XMLSerializer().serializeToString(node);
