@@ -6,27 +6,44 @@
     </button>
   </div>
   <div class="modal-body">
-      <div class="container">
-        <div class="row">
-          <label>
-            Paikattu <input type="checkbox" [(ngModel)]="properties.ready">
-          </label>
-        </div>
-        <div class="row">
-          <label class="col-form-label">Asfalttilaji</label>
-          <select class="form-control" [(ngModel)]="properties.pavementCombined">
-            <option *ngFor="let type of pavementTypes" [ngValue]="type">{{type}}</option>
-          </select>
-        </div>
-        <div class="row">
-          <label class="col-form-label">Lisätiedot</label>
-          <textarea class="form-control" rows=5 [(ngModel)]="properties.comment"></textarea>
-        </div>
+    <div class="container">
+      <div class="row">
+        <label>
+          Paikattu <input type="checkbox" [(ngModel)]="properties.ready">
+        </label>
       </div>
+      <div class="row">
+        <label class="col-form-label">Asfalttilaji</label>
+        <select class="form-control" [(ngModel)]="properties.pavementCombined">
+          <option *ngFor="let type of pavementTypes" [ngValue]="type">{{type}}</option>
+        </select>
+      </div>
+      <div class="row">
+        <label class="col-form-label">Lisätiedot</label>
+        <textarea class="form-control" rows=5 [(ngModel)]="properties.comment"></textarea>
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
-    <button *ngIf="!addPatch" class="btn btn-danger" (click)="delete()">Poista</button>
-    <button class="btn btn-primary" (click)="save()">Tallenna</button>
-    <button class="btn btn-default" (click)="close()">Sulje</button>
+      <div *ngIf="confirmDelete">
+        <div class="mx-auto alert alert-danger">Haluatko varmasti poistaa paikkausmerkinnän?</div>
+
+        <div class="clearfix">
+          <div class="float-right">
+            <button class="btn btn-danger" (click)="delete()">Kyllä</button>
+            <button class="btn btn-default" (click)="confirmDelete = false">Ei</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearfix" *ngIf="!confirmDelete">
+        <div class="float-right">
+          <button *ngIf="!addPatch" class="btn btn-danger" (click)="confirmDelete = true">Poista</button>
+          <button class="btn btn-primary" (click)="save()">Tallenna</button>
+          <button class="btn btn-default" (click)="close()">Sulje</button>
+        </div>
+      </div>
+
+
   </div>
 </template>

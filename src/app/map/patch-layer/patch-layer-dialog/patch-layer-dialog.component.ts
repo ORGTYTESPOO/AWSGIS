@@ -48,6 +48,7 @@ export class PatchLayerDialogComponent implements OnInit {
   feature: ol.Feature;
   properties: Object;
   pavementTypes: Array<String> = PAVEMENT_TYPES;
+  confirmDelete: boolean = false;
 
   constructor(private modalService: NgbModal) { }
 
@@ -122,6 +123,7 @@ export class PatchLayerDialogComponent implements OnInit {
   }
 
   delete() {
+    this.confirmDelete = false;
     this.assignProperties();
     this.feature.set('deleted', true);
     this.feature.set('geom', this.feature.getGeometry());
