@@ -13,6 +13,7 @@ export class StreetLayerDialogComponent implements OnInit {
   @ViewChild('streetConditionDialog') streetConditionDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
   @Input() streetLayer: any;
+  @Input() afterSave: Function;
   modalRef: NgbModalRef;
   parameters: any;
   properties: any;
@@ -77,6 +78,7 @@ export class StreetLayerDialogComponent implements OnInit {
     .then((result) => {
       this.success = true;
       this.modalRef.close();
+      this.afterSave();
     })
     .catch((err) => {
       this.error = true;

@@ -8,7 +8,7 @@ declare var ol: any;
 
 @Component({
   selector: 'esp-street-layer',
-  template: '<esp-street-layer-dialog [streetLayer]="streetLayer" [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
+  template: '<esp-street-layer-dialog [streetLayer]="streetLayer" [afterSave]="refreshLayer.bind(this)" [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
 })
 export class StreetLayerComponent implements OnInit {
 
@@ -98,4 +98,10 @@ export class StreetLayerComponent implements OnInit {
     });
   }
 
+  refreshLayer() {
+    // Update a dummy parameter to force layer refresh
+    const salt = {salt: Math.random()};
+    this.streetConditionSource.updateParams(salt);
+    this.streetMaintenanceSource.updateParams(salt);
+  }
 }

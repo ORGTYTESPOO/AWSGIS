@@ -43,6 +43,7 @@ export class PatchLayerDialogComponent implements OnInit {
   @Input() dialogParameterStream: Subject<any>;
   @Input() addPatch: boolean;
   @Input() afterAdd: Function;
+  @Input() afterSave: Function;
   modalRef: NgbModalRef;
   feature: ol.Feature;
   properties: Object;
@@ -156,6 +157,8 @@ export class PatchLayerDialogComponent implements OnInit {
       if (this.addPatch) {
         this.afterAdd();
       }
+
+      this.afterSave();
     })
     .catch((err) => {
       console.log(err);
