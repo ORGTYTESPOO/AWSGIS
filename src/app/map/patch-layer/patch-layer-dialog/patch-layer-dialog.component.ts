@@ -33,6 +33,12 @@ const PAVEMENT_TYPES = [
 
 const DEFAULT_PAVEMENT_TYPE = 'AB 11/100';
 
+const MAINTENANCERS = [
+  'IPA/ylläpito',
+  'HSY',
+  'Muut'
+];
+
 @Component({
   selector: 'esp-patch-layer-dialog',
   templateUrl: './patch-layer-dialog.component.html'
@@ -48,6 +54,7 @@ export class PatchLayerDialogComponent implements OnInit {
   feature: ol.Feature;
   properties: Object;
   pavementTypes: Array<String> = PAVEMENT_TYPES;
+  maintenancers: Array<String> = MAINTENANCERS;
   confirmDelete: boolean = false;
 
   constructor(private modalService: NgbModal) { }
@@ -83,7 +90,8 @@ export class PatchLayerDialogComponent implements OnInit {
       ready: feature.get('ready') || false,
       comment: feature.get('comment') || '',
       pavementCombined: pavementCombined || DEFAULT_PAVEMENT_TYPE,
-      updated: feature.get('updated')
+      updated: feature.get('updated'),
+      maintby: feature.get('maintby') || MAINTENANCERS[0]
     };
   }
 
@@ -105,6 +113,7 @@ export class PatchLayerDialogComponent implements OnInit {
     this.feature.set('kgm2', kgm2 || null);
     this.feature.set('updated', new Date().toISOString());
     this.feature.set('comment', this.properties['comment']);
+    this.feature.set('maintby', this.properties['maintby']);
   }
 
   save() {

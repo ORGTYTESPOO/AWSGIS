@@ -22,6 +22,12 @@
         </select>
       </div>
       <div class="row">
+        <label class="col-form-label">Ylläpitäjä</label>
+        <select class="form-control" [(ngModel)]="properties.maintby">
+          <option *ngFor="let maintenancer of maintenancers" [ngValue]="maintenancer">{{maintenancer}}</option>
+        </select>
+      </div>
+      <div class="row">
         <label class="col-form-label">Lisätiedot</label>
         <textarea class="form-control" rows=5 [(ngModel)]="properties.comment"></textarea>
       </div>
