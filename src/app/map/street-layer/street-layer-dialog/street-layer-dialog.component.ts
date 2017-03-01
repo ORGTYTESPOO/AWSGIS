@@ -50,6 +50,7 @@ export class StreetLayerDialogComponent implements OnInit {
 
     // Set the modified worstura property to the feature to be serialized
     this.parameters.set('worstura', this.properties.worstura)
+    this.parameters.set('comment', this.properties.comment);
 
     // Ugly hack... unset unnecessary attributes from the object to prevent
     // error from Geoserver. Find a nicer way to handle this.
