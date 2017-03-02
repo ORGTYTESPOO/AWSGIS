@@ -3,6 +3,7 @@ import {Observable, Subject} from "rxjs";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
+import * as moment from 'moment';
 
 @Component({
   selector: 'esp-street-layer-dialog',
@@ -34,6 +35,12 @@ export class StreetLayerDialogComponent implements OnInit {
     this.dialogParameterStream.subscribe( (parameters: any) => {
       this.parameters = parameters;
       this.properties = parameters.getProperties();
+
+      const updated = moment(parameters.get('updated'), 'YYYY-MM-DDZ');
+      this.properties.updated = updated.isValid()
+        ? updated.format('DD.MM.YYYY')
+        : '';
+
       this.success = null;
       this.error = null;
       this.modalRef = this.modalService.open(this.streetConditionDialog, parameters);

@@ -3,6 +3,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Observable, Subject } from "rxjs";
 import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
+import * as moment from 'moment';
 
 /**
  * Hardcoded list of pavement types and related values combined together.
@@ -86,11 +87,13 @@ export class PatchLayerDialogComponent implements OnInit {
       pavementCombined = parts.join(' ');
     }
 
+    const updated = moment(feature.get('updated'), 'YYYY-MM-DDZ');
+
     return {
       ready: feature.get('ready') || false,
       comment: feature.get('comment') || '',
       pavementCombined: pavementCombined || DEFAULT_PAVEMENT_TYPE,
-      updated: feature.get('updated'),
+      updated: updated.isValid() ? updated.format('DD.MM.YYYY') : '',
       maintby: feature.get('maintby') || MAINTENANCERS[0]
     };
   }
