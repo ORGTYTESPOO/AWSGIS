@@ -14,6 +14,7 @@ import {Routes} from "./routes";
 import {RouterModule} from "@angular/router";
 import { ReportComponent } from './report/report.component';
 import {UserAgentService} from "./useragent.service";
+import { GpsPositionLayerComponent } from './map/gps-position-layer/gps-position-layer.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {UserAgentService} from "./useragent.service";
     StreetLayerDialogComponent,
     PatchLayerComponent,
     PatchLayerDialogComponent,
-    ReportComponent
+    ReportComponent,
+    GpsPositionLayerComponent
   ],
   imports: [
     BrowserModule,

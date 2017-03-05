@@ -19,6 +19,7 @@
       [map]="map"
       [mapClickObservable]="mapClickObservable">
     </esp-patch-layer>
+    <esp-gps-position-layer *ngIf="showMap" [map]="map"></esp-gps-position-layer>
 
     <div id="report-holder" class="ol-control">
       <button id="report-toggle">
