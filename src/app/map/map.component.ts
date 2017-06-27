@@ -6,6 +6,8 @@ import * as axios from 'axios';
 import {UserAgentService} from "../useragent.service";
 import {Router} from "@angular/router";
 
+import { CognitoService, LoggedInCallback } from '../cognito.service';
+
 declare var ol: any;
 declare var isMobile: any;
 
@@ -14,7 +16,7 @@ declare var isMobile: any;
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.less']
 })
-export class MapComponent {
+export class MapComponent implements LoggedInCallback {
 
   map: any;
   showMap: boolean = false;
@@ -22,7 +24,14 @@ export class MapComponent {
   showLegend: boolean = true;
   isReportVisible: boolean = false;
 
-  constructor(private userAgentService: UserAgentService, private router: Router) {
+  constructor(private userAgentService: UserAgentService, private router: Router, private cognitoService: CognitoService) {
+    this.cognitoService.isAuthenticated(this);
+  }
+
+  isLoggedIn(message: string, loggedIn: boolean): void {
+    if (!loggedIn) {
+      this.router.navigate(['/login']);
+    }
   }
 
   ngOnInit() {
