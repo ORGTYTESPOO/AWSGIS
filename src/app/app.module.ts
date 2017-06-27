@@ -15,6 +15,8 @@ import {RouterModule} from "@angular/router";
 import { ReportComponent } from './report/report.component';
 import {UserAgentService} from "./useragent.service";
 import { GpsPositionLayerComponent } from './map/gps-position-layer/gps-position-layer.component';
+import { LoginComponent } from './login/login.component';
+import { CognitoService } from './cognito.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { GpsPositionLayerComponent } from './map/gps-position-layer/gps-position
     PatchLayerComponent,
     PatchLayerDialogComponent,
     ReportComponent,
-    GpsPositionLayerComponent
+    GpsPositionLayerComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,7 @@ import { GpsPositionLayerComponent } from './map/gps-position-layer/gps-position
     NgbModule.forRoot(),
     RouterModule.forRoot(Routes)
   ],
-  providers: [UserAgentService],
+  providers: [UserAgentService, CognitoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
