@@ -14,6 +14,11 @@ export class CognitoService {
       throw new Error('No callback provided');
     }
 
-    callback.isLoggedIn('callback message', true);
+    callback.isLoggedIn('callback message', false);
+  }
+
+  login(username: string, password: string, callback: LoggedInCallback) {
+    console.log('Try to login with username/password', username, password);
+    callback.isLoggedIn('callback message', false);
   }
 }

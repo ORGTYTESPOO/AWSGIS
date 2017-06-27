@@ -10,6 +10,9 @@ import { CognitoService, LoggedInCallback } from '../cognito.service';
 })
 export class LoginComponent implements OnInit, LoggedInCallback {
 
+  username: string;
+  password: string;
+
   constructor(private router: Router, private cognitoService: CognitoService) {
     this.cognitoService.isAuthenticated(this);
   }
@@ -22,4 +25,11 @@ export class LoginComponent implements OnInit, LoggedInCallback {
 
   ngOnInit() {}
 
+  login() {
+    if (!this.username || !this.password) {
+      return;
+    }
+
+    this.cognitoService.login(this.username, this.password, this);
+  }
 }
