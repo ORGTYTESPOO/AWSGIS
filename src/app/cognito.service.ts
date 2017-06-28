@@ -139,4 +139,45 @@ export class CognitoService {
         },
     });
   }
+
+  changePassword(username: string, oldPassword: string, newPassword: string, callback: CognitoCallback) {
+    let authenticationData = {
+        Username: username,
+        Password: oldPassword,
+    };
+    let authenticationDetails = new AuthenticationDetails(authenticationData);
+
+    let userData = {
+        Username: username,
+        Pool: this.getUserPool()
+    };
+
+    console.log("UserLoginService: Params set...Authenticating the user");
+    let cognitoUser = new CognitoUser(userData);
+    console.log("UserLoginService: config is " + AWS.config);
+    cognitoUser.authenticateUser(authenticationDetails, {
+        newPasswordRequired: function (userAttributes, requiredAttributes) {
+            // User was signed up by an admin and must provide new
+            // password and required attributes, if any, to complete
+            // authentication.
+
+            // the api doesn't accept this field back
+            delete userAttributes.email_verified;
+            cognitoUser.completeNewPasswordChallenge(newPassword, requiredAttributes, {
+                onSuccess: function (result) {
+                    callback.cognitoCallback(null, userAttributes);
+                },
+                onFailure: function (err) {
+                    callback.cognitoCallback(err, null);
+                }
+            });
+        },
+        onSuccess: function (result) {
+            callback.cognitoCallback(null, result);
+        },
+        onFailure: function (err) {
+            callback.cognitoCallback(err, null);
+        }
+    });
+  }
 }

@@ -37,6 +37,8 @@ export class LoginComponent implements OnInit, LoggedInCallback, CognitoCallback
   cognitoCallback(message: string, result: any) {
     if (!message) {
       this.router.navigate(['/']);
+    } else if (message === 'User needs to set password.') {
+      this.router.navigate(['/change-password']);
     } else {
       this.error = message;
     }

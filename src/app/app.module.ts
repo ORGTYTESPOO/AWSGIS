@@ -16,6 +16,7 @@ import { ReportComponent } from './report/report.component';
 import {UserAgentService} from "./useragent.service";
 import { GpsPositionLayerComponent } from './map/gps-position-layer/gps-position-layer.component';
 import { LoginComponent } from './login/login.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 import { CognitoService } from './cognito.service';
 
 @NgModule({
@@ -28,7 +29,8 @@ import { CognitoService } from './cognito.service';
     PatchLayerDialogComponent,
     ReportComponent,
     GpsPositionLayerComponent,
-    LoginComponent
+    LoginComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
