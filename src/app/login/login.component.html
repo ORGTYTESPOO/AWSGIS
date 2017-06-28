@@ -1,4 +1,7 @@
 <div class="container">
+  <div class="bg-danger text-white" *ngIf="error">
+    {{ error }}
+  </div>
   <form>
     <div class="form-group row">
       <label for="username" class="col-sm-2 col-form-label">Käyttäjätunnus</label>
