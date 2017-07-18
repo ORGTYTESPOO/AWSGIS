@@ -16,7 +16,7 @@ export class AppComponent implements LoggedInCallback {
     this.cognitoService.isAuthenticated(this);
   }
 
-  isLoggedIn(message: string, loggedIn: boolean): void {
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
     console.log('AppComponent.isLoggedIn, message', message, ', loggedIn', loggedIn);
   }
 }

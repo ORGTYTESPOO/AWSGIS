@@ -14,7 +14,7 @@ export class ReportComponent implements OnInit, LoggedInCallback {
     this.cognitoService.isAuthenticated(this);
   }
 
-  isLoggedIn(message: string, loggedIn: boolean): void {
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
     if (!loggedIn) {
       this.router.navigate(['/login']);
     }

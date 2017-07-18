@@ -3,6 +3,8 @@ import { Observable, Subject } from "rxjs";
 import { environment } from '../../../environments/environment';
 import * as axios from 'axios';
 import { LayerType } from '../layertype';
+import { loadTiles } from '../utils';
+import { CognitoService, LoggedInCallback } from '../../cognito.service';
 
 declare var ol: any;
 
@@ -10,7 +12,7 @@ declare var ol: any;
   selector: 'esp-street-layer',
   template: '<esp-street-layer-dialog [streetLayer]="streetLayer" [afterSave]="refreshLayer.bind(this)" [dialogParameterStream]="dialogParameterStream"></esp-street-layer-dialog>'
 })
-export class StreetLayerComponent implements OnInit {
+export class StreetLayerComponent implements OnInit, LoggedInCallback {
 
   @Input() map: any;
   @Input() mapClickObservable: Observable<ol.MapBrowserEvent>;
@@ -21,10 +23,13 @@ export class StreetLayerComponent implements OnInit {
   streetSource: ol.source.TileWMS;
   streetConditionLayer: ol.layer.Tile;
   streetMaintenanceLayer: ol.layer.Tile;
+  jwtToken: string;
 
-  constructor() { }
+  constructor(private cognitoService: CognitoService) { }
 
   ngOnInit() {
+    this.cognitoService.isAuthenticated(this);
+
     this.dialogParameterStream = new Subject();
 
     this.streetConditionSource = this.createWMSSource('kunto');
@@ -63,7 +68,13 @@ export class StreetLayerComponent implements OnInit {
         params
       );
 
-      axios.get(url)
+      const options = {
+        headers: {
+          'Authorization': this.jwtToken
+        }
+      };
+
+      axios.get(url, options)
         .then((res) => {
           let format = new ol.format.GeoJSON();
           let features = format.readFeatures(res.data);
@@ -77,6 +88,12 @@ export class StreetLayerComponent implements OnInit {
     this.map.addLayer(this.streetMaintenanceLayer);
   }
 
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
+    if (loggedIn) {
+      this.jwtToken = jwtToken;
+    }
+  }
+
   createWMSSource(layername: string) {
     return new ol.source.TileWMS({
       url: environment.geoserver + '/wms',
@@ -84,6 +101,7 @@ export class StreetLayerComponent implements OnInit {
         'LAYERS': layername,
         'TILED': true
       },
+      tileLoadFunction: loadTiles.bind(null, this.jwtToken),
       serverType: 'geoserver'
     });
   }

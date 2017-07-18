@@ -4,12 +4,13 @@ import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
 import * as moment from 'moment';
+import { CognitoService, LoggedInCallback } from '../../../cognito.service';
 
 @Component({
   selector: 'esp-street-layer-dialog',
   templateUrl: './street-layer-dialog.component.html'
 })
-export class StreetLayerDialogComponent implements OnInit {
+export class StreetLayerDialogComponent implements OnInit, LoggedInCallback {
 
   @ViewChild('streetConditionDialog') streetConditionDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
@@ -20,6 +21,7 @@ export class StreetLayerDialogComponent implements OnInit {
   properties: any;
   success: boolean;
   error: boolean;
+  jwtToken: string;
 
   conditionOptions = [
     {value: 1, label: 'Erittäin huono'},
@@ -29,9 +31,10 @@ export class StreetLayerDialogComponent implements OnInit {
     {value: 5, label: 'Erinomainen'},
   ];
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private cognitoService: CognitoService) { }
 
   ngOnInit() {
+    this.cognitoService.isAuthenticated(this);
     this.dialogParameterStream.subscribe( (parameters: any) => {
       this.parameters = parameters;
       this.properties = parameters.getProperties();
@@ -45,6 +48,12 @@ export class StreetLayerDialogComponent implements OnInit {
       this.error = null;
       this.modalRef = this.modalService.open(this.streetConditionDialog, parameters);
     })
+  }
+
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
+    if (loggedIn) {
+      this.jwtToken = jwtToken;
+    }
   }
 
   save(): void {
@@ -81,7 +90,8 @@ export class StreetLayerDialogComponent implements OnInit {
       serialized,
       {
         headers: {
-          'Content-Type': 'text/xml'
+          'Content-Type': 'text/xml',
+          'Authorization': this.jwtToken
         }
       }
     )

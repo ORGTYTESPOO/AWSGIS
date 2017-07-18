@@ -14,7 +14,7 @@ import * as STS from "aws-sdk/clients/sts";
 // NOTE: https://github.com/aws/amazon-cognito-identity-js used as a reference
 
 export interface LoggedInCallback {
-  isLoggedIn(message: string, loggedIn: boolean): void;
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void;
 }
 
 export interface CognitoCallback {
@@ -82,14 +82,14 @@ export class CognitoService {
     if (cognitoUser) {
       cognitoUser.getSession(function (err, session) {
           if (err) {
-              callback.isLoggedIn(err, false);
+              callback.isLoggedIn(err, false, null);
           }
           else {
-              callback.isLoggedIn(err, session.isValid());
+            callback.isLoggedIn(null, session.isValid(), session.idToken.jwtToken);
           }
       });
     } else {
-      callback.isLoggedIn('', false);
+      callback.isLoggedIn('', false, null);
     }
   }
 

@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit, LoggedInCallback, CognitoCallback
     this.cognitoService.isAuthenticated(this);
   }
 
-  isLoggedIn(message: string, loggedIn: boolean): void {
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
     if (loggedIn) {
       this.router.navigate(['/']);
     }

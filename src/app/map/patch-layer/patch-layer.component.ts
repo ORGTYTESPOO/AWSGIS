@@ -3,6 +3,8 @@ import { Observable, Subject } from "rxjs";
 import { environment } from '../../../environments/environment';
 import * as axios from 'axios';
 import { LayerType } from '../layertype';
+import { loadTiles } from '../utils';
+import { CognitoService, LoggedInCallback } from '../../cognito.service';
 
 declare var ol: any;
 
@@ -10,7 +12,7 @@ declare var ol: any;
   selector: 'esp-patch-layer',
   template: '<esp-patch-layer-dialog [dialogParameterStream]="dialogParameterStream" [addPatch]="addPatch" [afterSave]="refreshLayer.bind(this)" [afterAdd]="disableAddPatch.bind(this)"></esp-patch-layer-dialog>'
 })
-export class PatchLayerComponent implements OnInit {
+export class PatchLayerComponent implements OnInit, LoggedInCallback {
 
   @Input() map: ol.Map;
   @Input() mapClickObservable: Observable<ol.MapBrowserEvent>;
@@ -21,10 +23,12 @@ export class PatchLayerComponent implements OnInit {
   addPatch: boolean = false;
   addPatchButton: Element;
   addPatchControl: ol.control.Control;
+  jwtToken: string;
 
-  constructor() { }
+  constructor(private cognitoService: CognitoService) { }
 
   ngOnInit() {
+    this.cognitoService.isAuthenticated(this);
     this.addPatchButton = document.getElementById('add-patch');
     this.addPatchControl = this.getAddPatchControl();
 
@@ -37,6 +41,7 @@ export class PatchLayerComponent implements OnInit {
         TILED: true
       },
       projection: environment.projection,
+      tileLoadFunction: loadTiles.bind(null, this.jwtToken),
       serverType: 'geoserver'
     });
 
@@ -47,6 +52,7 @@ export class PatchLayerComponent implements OnInit {
         TILED: true
       },
       projection: environment.projection,
+      tileLoadFunction: loadTiles.bind(null, this.jwtToken),
       serverType: 'geoserver'
     });
 
@@ -126,7 +132,8 @@ export class PatchLayerComponent implements OnInit {
           serialized,
           {
             headers: {
-              'Content-Type': 'text/xml'
+              'Content-Type': 'text/xml',
+              'Authorization': this.jwtToken
             }
           }
         ).then(res => {
@@ -154,6 +161,12 @@ export class PatchLayerComponent implements OnInit {
     });
 
     this.map.addLayer(this.patchLayer);
+  }
+
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
+    if (loggedIn) {
+      this.jwtToken = jwtToken;
+    }
   }
 
   getAddPatchControl() {

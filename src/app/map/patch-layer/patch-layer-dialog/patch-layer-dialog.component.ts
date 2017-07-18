@@ -4,6 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { environment } from '../../../../environments/environment';
 import * as axios from 'axios';
 import * as moment from 'moment';
+import { CognitoService, LoggedInCallback } from '../../../cognito.service';
 
 /**
  * Hardcoded list of pavement types and related values combined together.
@@ -44,7 +45,7 @@ const MAINTENANCERS = [
   selector: 'esp-patch-layer-dialog',
   templateUrl: './patch-layer-dialog.component.html'
 })
-export class PatchLayerDialogComponent implements OnInit {
+export class PatchLayerDialogComponent implements OnInit, LoggedInCallback {
 
   @ViewChild('patchDialog') patchDialog:ElementRef;
   @Input() dialogParameterStream: Subject<any>;
@@ -57,15 +58,23 @@ export class PatchLayerDialogComponent implements OnInit {
   pavementTypes: Array<String> = PAVEMENT_TYPES;
   maintenancers: Array<String> = MAINTENANCERS;
   confirmDelete: boolean = false;
+  jwtToken: string;
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private cognitoService: CognitoService) { }
 
   ngOnInit() {
+    this.cognitoService.isAuthenticated(this);
     this.dialogParameterStream.subscribe((feature: ol.Feature) => {
       this.feature = feature;
       this.properties = this.getProperties(feature);
       this.modalRef = this.modalService.open(this.patchDialog, feature);
     });
+  }
+
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
+    if (loggedIn) {
+      this.jwtToken = jwtToken;
+    }
   }
 
   getProperties(feature: ol.Feature): Object {
@@ -162,7 +171,8 @@ export class PatchLayerDialogComponent implements OnInit {
       serialized,
       {
         headers: {
-          'Content-Type': 'text/xml'
+          'Content-Type': 'text/xml',
+          'Authorization': this.jwtToken
         }
       }
     )

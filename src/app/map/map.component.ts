@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import * as axios from 'axios';
 import {UserAgentService} from "../useragent.service";
 import {Router} from "@angular/router";
+import { loadImage } from './utils';
 
 import { CognitoService, LoggedInCallback } from '../cognito.service';
 
@@ -23,15 +24,18 @@ export class MapComponent implements LoggedInCallback {
   mapClickObservable: Observable<ol.MapBrowserEvent>;
   showLegend: boolean = true;
   isReportVisible: boolean = false;
+  jwtToken: string;
 
   constructor(private userAgentService: UserAgentService, private router: Router, private cognitoService: CognitoService) {
     this.cognitoService.isAuthenticated(this);
   }
 
-  isLoggedIn(message: string, loggedIn: boolean): void {
+  isLoggedIn(message: string, loggedIn: boolean, jwtToken: string): void {
     if (!loggedIn) {
       this.router.navigate(['/login']);
     }
+
+    this.jwtToken = jwtToken;
   }
 
   ngOnInit() {
@@ -86,9 +90,9 @@ export class MapComponent implements LoggedInCallback {
       const url = `${environment.geoserver}/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&FORMAT=image%2Fpng&LAYER=espoo:${layerName}`;
       const legend = document.getElementById('legend');
       const img = document.createElement('img');
-      img.setAttribute('src', url);
       legend.innerHTML = "";
       legend.appendChild(img);
+      loadImage(this.jwtToken, img, url);
     };
 
     const visibleHandler = (e) => {
