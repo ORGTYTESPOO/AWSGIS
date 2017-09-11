@@ -17,6 +17,7 @@ import {UserAgentService} from "./useragent.service";
 import { GpsPositionLayerComponent } from './map/gps-position-layer/gps-position-layer.component';
 import { LoginComponent } from './login/login.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ForgotPasswordComponent, ForgotPasswordStep2Component } from './forgot-password/forgot-password.component';
 import { CognitoService } from './cognito.service';
 
 @NgModule({
@@ -30,7 +31,9 @@ import { CognitoService } from './cognito.service';
     ReportComponent,
     GpsPositionLayerComponent,
     LoginComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ForgotPasswordComponent,
+    ForgotPasswordStep2Component
   ],
   imports: [
     BrowserModule,

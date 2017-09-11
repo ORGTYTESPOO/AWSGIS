@@ -34,6 +34,10 @@ export class LoginComponent implements OnInit, LoggedInCallback, CognitoCallback
     this.cognitoService.login(this.username, this.password, this);
   }
 
+  forgot() {
+    this.router.navigate(['/forgot-password']);
+  }
+
   cognitoCallback(message: string, result: any) {
     if (!message) {
       this.router.navigate(['/']);
