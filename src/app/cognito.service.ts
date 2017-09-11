@@ -140,6 +140,16 @@ export class CognitoService {
     });
   }
 
+  logout(callback: LoggedInCallback) {
+    let user = this.getCurrentUser();
+
+    if (user) {
+      user.signOut();
+    }
+
+    callback.isLoggedIn('', false, null);
+  }
+
   changePassword(username: string, oldPassword: string, newPassword: string, callback: CognitoCallback) {
     let authenticationData = {
         Username: username,

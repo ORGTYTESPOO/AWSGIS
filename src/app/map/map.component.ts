@@ -80,6 +80,7 @@ export class MapComponent implements LoggedInCallback {
     this.map.addLayer(basemapLayer);
     this.map.addControl(this.getLayerSwitcherControl());
     this.map.addControl(this.getReportToggleControl());
+    this.map.addControl(this.getLogoutButton());
     this.initializeLegend();
   }
 
@@ -181,6 +182,31 @@ export class MapComponent implements LoggedInCallback {
     }
   }
 
+  getLogoutButton(): void {
+    const _this = this;
+
+    let logoutControl = function (opt_options): void {
+      let options = opt_options || {};
+
+      const logoutButton = document.getElementById('logout-btn-holder');
+      logoutButton.addEventListener('click', (event: any) => {
+        _this.logout();
+      });
+
+      ol.control.Control.call(this, {
+        element: logoutButton,
+        target: options.target
+      });
+
+    };
+
+    ol.inherits(logoutControl, ol.control.Control);
+    return new logoutControl({target: 'map'});
+  }
+
+  logout() {
+    this.cognitoService.logout(this);
+  }
 
   getLayerSwitcherControl() {
     this.map.getLayers().on('add', this.redrawLayerSwitcher, this);
