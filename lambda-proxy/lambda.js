@@ -10,5 +10,10 @@ const binaryMimeTypes = [
 
 const server = awsServerlessExpress.createServer(app, null, binaryMimeTypes);
 
-exports.handler = (event, context) =>
+exports.handler = (event, context) => {
+  // API gateway does not support gzipped content, decoding fails on the client.
+  // Settings Accept-Encoding header to identity is a workaround until it is
+  // supported.
+  event.headers['Accept-Encoding'] = 'identity';
   awsServerlessExpress.proxy(server, event, context);
+}
