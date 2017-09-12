@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  geoserver: 'https://to2zv1czm8.execute-api.eu-west-1.amazonaws.com/prod',
+  geoserver: 'https://to2zv1czm8.execute-api.eu-west-1.amazonaws.com/api/geoserver/espoo',
   projection: 'EPSG:3857',
 
   aws: {
