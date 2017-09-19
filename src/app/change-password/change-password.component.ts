@@ -12,6 +12,7 @@ export class ChangePasswordComponent implements OnInit, CognitoCallback {
   username: string;
   oldPassword: string;
   newPassword: string;
+  verifyPassword: string;
   error: string
 
   constructor(private router: Router, private cognitoService: CognitoService) {
@@ -20,10 +21,16 @@ export class ChangePasswordComponent implements OnInit, CognitoCallback {
   ngOnInit() {}
 
   changePassword() {
-    if (!this.username || !this.oldPassword || !this.newPassword) {
+    if (!this.username || !this.oldPassword || !this.newPassword || !this.verifyPassword) {
       return;
     }
 
+    if (this.newPassword !== this.verifyPassword) {
+      this.error = 'Salasanat eivät täsmää.';
+      return;
+    }
+
+    this.error = '';
     this.cognitoService.changePassword(this.username, this.oldPassword, this.newPassword, this);
   }
 

@@ -42,6 +42,7 @@ export class ForgotPasswordComponent implements OnInit, CognitoCallback {
 export class ForgotPasswordStep2Component implements OnInit, CognitoCallback {
   username: string;
   password: string;
+  verifyPassword: string;
   verificationCode: string;
   error: string
   processing: boolean = false;
@@ -69,11 +70,16 @@ export class ForgotPasswordStep2Component implements OnInit, CognitoCallback {
       console.log('Password successfully changed.');
       this.router.navigate(['/login']);
     }
-
   }
 
   changePassword() {
+    if (this.password !== this.verifyPassword) {
+      this.error = 'Salasanat eivät täsmää.'
+      return;
+    }
+
     this.processing = true;
+    this.error = '';
     this.cognitoService.confirmNewPassword(this.username, this.verificationCode, this.password, this);
   }
 }
