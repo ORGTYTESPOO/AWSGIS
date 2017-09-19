@@ -13,7 +13,8 @@ export class ChangePasswordComponent implements OnInit, CognitoCallback {
   oldPassword: string;
   newPassword: string;
   verifyPassword: string;
-  error: string
+  error: string;
+  processing: boolean = false;
 
   constructor(private router: Router, private cognitoService: CognitoService) {
   }
@@ -30,11 +31,13 @@ export class ChangePasswordComponent implements OnInit, CognitoCallback {
       return;
     }
 
+    this.processing = true;
     this.error = '';
     this.cognitoService.changePassword(this.username, this.oldPassword, this.newPassword, this);
   }
 
   cognitoCallback(message: string, result: any) {
+    this.processing = false;
     if (!message) {
       this.router.navigate(['/login']);
     } else {

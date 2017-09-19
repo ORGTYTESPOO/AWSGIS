@@ -12,7 +12,8 @@ export class LoginComponent implements OnInit, LoggedInCallback, CognitoCallback
 
   username: string;
   password: string;
-  error: string
+  error: string;
+  processing: boolean = false;
 
   constructor(private router: Router, private cognitoService: CognitoService) {
     this.cognitoService.isAuthenticated(this);
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit, LoggedInCallback, CognitoCallback
       return;
     }
 
+    this.processing = true;
     this.cognitoService.login(this.username, this.password, this);
   }
 
@@ -39,6 +41,7 @@ export class LoginComponent implements OnInit, LoggedInCallback, CognitoCallback
   }
 
   cognitoCallback(message: string, result: any) {
+    this.processing = false;
     if (!message) {
       this.router.navigate(['/']);
     } else if (message === 'User needs to set password.') {
