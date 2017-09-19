@@ -39,7 +39,7 @@ export class ForgotPasswordComponent implements OnInit, CognitoCallback {
   templateUrl: './forgot-password-step2.component.html',
   styleUrls: ['./forgot-password.component.less']
 })
-export class ForgotPasswordStep2Component implements OnInit, CognitoCallback {
+export class ForgotPasswordStep2Component implements OnInit, OnDestroy, CognitoCallback {
   username: string;
   password: string;
   verifyPassword: string;

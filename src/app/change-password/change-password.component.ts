@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 
 import { CognitoService, LoggedInCallback, CognitoCallback } from '../cognito.service';
 
@@ -8,18 +8,27 @@ import { CognitoService, LoggedInCallback, CognitoCallback } from '../cognito.se
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.less']
 })
-export class ChangePasswordComponent implements OnInit, CognitoCallback {
+export class ChangePasswordComponent implements OnInit, OnDestroy, CognitoCallback {
   username: string;
   oldPassword: string;
   newPassword: string;
   verifyPassword: string;
   error: string;
   processing: boolean = false;
+  private sub: any;
 
-  constructor(private router: Router, private cognitoService: CognitoService) {
+  constructor(private router: Router, public route: ActivatedRoute, private cognitoService: CognitoService) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      this.username = params['username'];
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 
   changePassword() {
     if (!this.username || !this.oldPassword || !this.newPassword || !this.verifyPassword) {

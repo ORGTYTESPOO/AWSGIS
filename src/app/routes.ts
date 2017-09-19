@@ -8,6 +8,7 @@ export const Routes = [
   { path: '', component: MapComponent },
   { path: 'report', component: ReportComponent},
   { path: 'login', component: LoginComponent },
+  { path: 'change-password/:username', component: ChangePasswordComponent },
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'forgot-password/:username', component: ForgotPasswordStep2Component},
   { path: 'forgot-password', component: ForgotPasswordComponent },
