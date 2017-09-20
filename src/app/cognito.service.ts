@@ -37,7 +37,37 @@ export class CognitoService {
 
   private cognitoCreds: AWS.CognitoIdentityCredentials;
 
-  constructor() { }
+  constructor() {
+    // refresh tokens when the service is created and every minute to make sure
+    // the tokens won't expire
+    this.refreshTokens();
+    setInterval(this.refreshTokens.bind(this), 1000 * 60);
+  }
+
+  refreshTokens() {
+    const cognitoUser = this.getCurrentUser();
+
+    if (cognitoUser) {
+      cognitoUser.getSession((err, session) => {
+        if (err) {
+          console.log('Error while getting user session.', err);
+          return;
+        }
+
+        if (session.isValid()) {
+          cognitoUser.refreshSession(session.refreshToken, (err, session) => {
+            if (err) {
+              console.log('Error refreshing session.', err);
+              return;
+            }
+
+            const creds = this.buildCognitoCreds(session.idToken.jwtToken);
+            AWS.config.credentials = creds;
+          });
+        }
+      });
+    }
+  }
 
   // AWS Stores Credentials in many ways, and with TypeScript this means that
   // getting the base credentials we authenticated with from the AWS globals gets really murky,
